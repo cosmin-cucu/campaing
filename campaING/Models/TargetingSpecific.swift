@@ -6,7 +6,6 @@
 //
 
 struct TargetingSpecific: Codable {
-    let id: Int
-    let name: String
+    let specificIdentifier: String
     let campaignChannels: [CampaignChannel]
 }

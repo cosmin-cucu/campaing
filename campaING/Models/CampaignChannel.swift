@@ -8,6 +8,5 @@
 import Foundation
 
 struct CampaignChannel: Codable {
-    let id: Int
     let name: String
 }

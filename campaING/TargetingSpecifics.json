@@ -1,6 +1,6 @@
 [
     {
-        "specificIdentifier": "Location",
+        "name": "Location",
         "campaignChannels": [
             {"name": "Facebook"},
             {"name": "Linkedin"},
@@ -10,7 +10,7 @@
         ]
     },
     {
-        "specificIdentifier": "Age",
+        "name": "Age",
         "campaignChannels": [
             {"name": "Facebook"},
             {"name": "Linkedin"},
@@ -20,7 +20,7 @@
         ]
     },
     {
-        "specificIdentifier": "Sex",
+        "name": "Sex",
         "campaignChannels": [
             {"name": "Facebook"},
             {"name": "Linkedin"},
@@ -30,7 +30,7 @@
         ]
     },
     {
-        "specificIdentifier": "Spoken languages",
+        "name": "Spoken languages",
         "campaignChannels": [
             {"name": "Facebook"},
             {"name": "Twitter"},
@@ -38,70 +38,70 @@
         ]
     },
     {
-        "specificIdentifier": "Events",
+        "name": "Events",
         "campaignChannels": [
             {"name": "Facebook"},
             {"name": "Twitter"}
         ]
     },
     {
-        "specificIdentifier": "Company",
+        "name": "Company",
         "campaignChannels": [
             {"name": "LinkedIn"}
         ]
     },
     {
-        "specificIdentifier": "Industry",
+        "name": "Industry",
         "campaignChannels": [
             {"name": "LinkedIn"},
             {"name": "SEO"}
         ]
     },
     {
-        "specificIdentifier": "Expertise",
+        "name": "Expertise",
         "campaignChannels": [
             {"name": "LinkedIn"}
         ]
     },
     {
-        "specificIdentifier": "Education",
+        "name": "Education",
         "campaignChannels": [
             {"name": "LinkedIn"}
         ]
     },
     {
-        "specificIdentifier": "Technology",
+        "name": "Technology",
         "campaignChannels": [
             {"name": "Twitter"}
         ]
     },
     {
-        "specificIdentifier": "Interests",
+        "name": "Interests",
         "campaignChannels": [
             {"name": "Instagram"}
         ]
     },
     {
-        "specificIdentifier": "Device",
+        "name": "Device",
         "campaignChannels": [
             {"name": "Google AdWords"}
         ]
     },
     {
-        "specificIdentifier": "Keywords",
+        "name": "Keywords",
         "campaignChannels": [
             {"name": "Google AdWords"},
             {"name": "SEO"}
         ]
     },
     {
-        "specificIdentifier": "Similar products / services",
+        "name": "Similar products / services",
         "campaignChannels": [
             {"name": "Google AdWords"}
         ]
     },
     {
-        "specificIdentifier": "Hyperlinks",
+        "name": "Hyperlinks",
         "campaignChannels": [
             {"name": "SEO"}
         ]

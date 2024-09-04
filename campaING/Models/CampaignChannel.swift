@@ -7,6 +7,6 @@
 
 import Foundation
 
-struct CampaignChannel: Codable, Equatable, Hashable {
+struct CampaignChannel: Codable, Equatable, Hashable, CampaignBuildingFilterCellCustomizing {
     let name: String
 }

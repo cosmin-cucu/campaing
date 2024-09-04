@@ -20,9 +20,10 @@ class CampaignBuilderTableViewModel: NSObject {
         return service.specifics.count
     }
     
-    func customizeCell(_ cell: TargetingSpecificCell, for row: Int) {
-        let isCellSelected = service.selectedSpecifics.contains(where: { $0.specificIdentifier == service.specifics[row].specificIdentifier })
-        cell.customizeWith(service.specifics[row], isSelected: isCellSelected)
+    func customizeCell(_ cell: CampaignBuildingFilterCell, for row: Int) {
+        let element = service.specifics[row]
+        let isCellSelected = service.selectedSpecifics.contains(where: { $0.name == service.specifics[row].name })
+        element.customize(cell, isSelected: isCellSelected)
     }
 }
 
@@ -33,7 +34,7 @@ extension CampaignBuilderTableViewModel: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let targetingSpecificCell = tableView.dequeueReusableCell(withIdentifier: "TargetingSpecificCell", for: indexPath) as? TargetingSpecificCell else {
+        guard let targetingSpecificCell = tableView.dequeueReusableCell(withIdentifier: "CampaignBuildingFilterCell", for: indexPath) as? CampaignBuildingFilterCell else {
             return UITableViewCell()
         }
         customizeCell(targetingSpecificCell, for: indexPath.row)

@@ -9,20 +9,20 @@ import UIKit
 
 class CampaignBuilderTableViewModel: NSObject {
     let step: CampaignBuilderStep
-    let service: CampaignBuilderService
+    let service: CampaignBuilding
     
-    init(builderService: CampaignBuilderService, step: CampaignBuilderStep = .chooseTargetingSpecifics) {
+    init(builderService: CampaignBuilding, step: CampaignBuilderStep = .chooseTargetingSpecifics) {
         self.service = builderService
         self.step = step
     }
     
     var numberOfFilters: Int {
-        return service.filters.count
+        return service.specifics.count
     }
     
     func customizeCell(_ cell: TargetingSpecificCell, for row: Int) {
-        let isCellSelected = service.selectedSpecifics.contains(where: { $0.specificIdentifier == service.filters[row].specificIdentifier })
-        cell.customizeWith(service.filters[row], isSelected: isCellSelected)
+        let isCellSelected = service.selectedSpecifics.contains(where: { $0.specificIdentifier == service.specifics[row].specificIdentifier })
+        cell.customizeWith(service.specifics[row], isSelected: isCellSelected)
     }
 }
 

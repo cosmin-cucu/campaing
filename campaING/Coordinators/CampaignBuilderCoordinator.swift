@@ -8,6 +8,7 @@ import UIKit
 
 class CampaignBuilderCoordinator: NSObject, Coordinator {
     private var currentStep: CampaignBuilderStep = .chooseTargetingSpecifics
+    let buildingService: CampaignBuilding = CampaignBuilderService(targetingSpecificsProvider: LocalJSONTargetingSpecificsLoader())
     var navigationController: UINavigationController
     
     init(navigationController: UINavigationController) {
@@ -34,8 +35,9 @@ class CampaignBuilderCoordinator: NSObject, Coordinator {
 extension CampaignBuilderCoordinator {
     func newViewControllerFor(_ step: CampaignBuilderStep) -> CampaignBuilderTableViewController {
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let campaignBuilderTableViewController = mainStoryboard.instantiateViewController(identifier: "CampaignBuilderTableViewController", creator: { coder in
-            let viewController = CampaignBuilderTableViewController(coder: coder, coordinator: self, step: step)
+        guard let campaignBuilderTableViewController = mainStoryboard.instantiateViewController(identifier: "CampaignBuilderTableViewController", creator: { [weak self] coder in
+            guard let self = self else { fatalError("Could not instantiate CampaignBuilderTableViewController") }
+            let viewController = CampaignBuilderTableViewController(coder: coder, coordinator: self, step: step, buildingService: buildingService)
             return viewController
         }) as? CampaignBuilderTableViewController else {
             fatalError("Could not instantiate CampaignBuilderTableViewController")

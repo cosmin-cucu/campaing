@@ -8,23 +8,26 @@
 import UIKit
 
 final class CampaignBuilderTableViewController: UITableViewController {
-    let service: CampaignBuilderService = CampaignBuilderService(targetingSpecificsProvider: LocalJSONDataLoader())
+    let service: CampaignBuilding
     let viewModel: CampaignBuilderTableViewModel
     let coordinator: CampaignBuilderCoordinator?
     
     required override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        self.service = CampaignBuilderService(targetingSpecificsProvider: LocalJSONTargetingSpecificsLoader())
         self.viewModel = .init(builderService: service, step: .chooseTargetingSpecifics)
         self.coordinator = nil
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
-    init?(coder: NSCoder, coordinator: CampaignBuilderCoordinator, step: CampaignBuilderStep = .chooseTargetingSpecifics) {
+    init?(coder: NSCoder, coordinator: CampaignBuilderCoordinator, step: CampaignBuilderStep = .chooseTargetingSpecifics, buildingService: CampaignBuilding) {
+        self.service = buildingService
         self.viewModel = .init(builderService: service, step: step)
         self.coordinator = coordinator
         super.init(coder: coder)
     }
     
     required init?(coder: NSCoder) {
+        self.service = CampaignBuilderService(targetingSpecificsProvider: LocalJSONTargetingSpecificsLoader())
         self.viewModel = .init(builderService: service)
         self.coordinator = nil
         super.init(coder: coder)
@@ -64,7 +67,7 @@ extension CampaignBuilderTableViewController {
 // MARK: UITableViewDelegate methods
 extension CampaignBuilderTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        service.didSelectFilterAt(indexPath.row)
+        service.didSelectSpecific(indexPath)
         tableView.reloadSections([0], with: .automatic)
     }
 }

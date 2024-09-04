@@ -8,57 +8,29 @@
 import Foundation
 
 protocol CampaignBuilding {
-    
+    var specifics: [TargetingSpecific] { get }
+    var selectedSpecifics: [TargetingSpecific] { get }
+    func didSelectSpecific(_ indexPath: IndexPath)
 }
 
 class CampaignBuilderService: CampaignBuilding {
-    let targetingSpecificsProvider: TargetingSpecificsProviding
-    var filters: [TargetingSpecific] {
-        guard !selectedSpecifics.isEmpty else { return targetingSpecificsProvider.targetingSpecifics }
-        
-        return targetingSpecificsProvider.targetingSpecifics.filter { specific in
-            selectedSpecifics
-                .map { $0.campaignChannels }
-                .compactMap { channels in
-                    channels.compactMap { $0 }
-                }
-                .contains(specific.campaignChannels)
-        }
-    }
-    var selectedSpecifics = [TargetingSpecific]()
+    private let targetingSpecificsProvider: TargetingSpecificsProviding
+    private(set) var selectedSpecifics = [TargetingSpecific]()
+    var specifics: [TargetingSpecific]
     
     init(targetingSpecificsProvider: TargetingSpecificsProviding) {
         self.targetingSpecificsProvider = targetingSpecificsProvider
+        self.specifics = targetingSpecificsProvider.targetingSpecifics
     }
     
-    func didSelectFilterAt(_ row: Int) {
-        let selectedSpecific = filters[row]
+    func didSelectSpecific(_ indexPath: IndexPath) {
+        let selectedSpecific = specifics[indexPath.row]
         if selectedSpecifics.contains(where: { $0 == selectedSpecific }) {
             selectedSpecifics = selectedSpecifics.filter { $0 != selectedSpecific }
         } else {
-            selectedSpecifics.append(filters[row])
+            selectedSpecifics.append(specifics[indexPath.row])
         }
-        
+        specifics = targetingSpecificsProvider.availableSpecificsFor(selectedSpecifics)
     }
 }
 
-protocol TargetingSpecificsProviding {
-    var targetingSpecifics: [TargetingSpecific] { get }
-}
-
-struct LocalJSONDataLoader: TargetingSpecificsProviding {
-    var targetingSpecifics: [TargetingSpecific] {
-        let fileName = "TargetingSpecifics.json"
-        guard let fileURL = Bundle.main.url(forResource: fileName, withExtension: nil) else {
-            fatalError("Couldn't find file \(fileName)")
-        }
-        do {
-            let data = try Data(contentsOf: fileURL)
-            let decoder = JSONDecoder()
-            return try decoder.decode([TargetingSpecific].self, from: data)
-        } catch let error {
-            print("Error decoding JSON: \(error)")
-            return []
-        }
-    }
-}

@@ -10,7 +10,8 @@ import UIKit
 final class TargetingSpecificCell: UITableViewCell {
     @IBOutlet weak var specificNameLabel: UILabel!
     
-    func customizeWith(_ specific: TargetingSpecific) {
+    func customizeWith(_ specific: TargetingSpecific, isSelected: Bool) {
         specificNameLabel.text = specific.specificIdentifier
+        backgroundColor = isSelected ? .systemGray5 : .clear
     }
 }

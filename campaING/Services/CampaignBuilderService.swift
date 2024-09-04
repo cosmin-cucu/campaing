@@ -7,13 +7,16 @@
 
 import Foundation
 
-class CampaignBuilderService {
-    private let targetingSpecifics: [TargetingSpecific] = readTargetingSpecificsJSONFromFile()
+protocol CampaignBuilding {
     
+}
+
+class CampaignBuilderService: CampaignBuilding {
+    let targetingSpecificsProvider: TargetingSpecificsProviding
     var filters: [TargetingSpecific] {
-        guard !selectedSpecifics.isEmpty else { return targetingSpecifics }
+        guard !selectedSpecifics.isEmpty else { return targetingSpecificsProvider.targetingSpecifics }
         
-        return targetingSpecifics.filter { specific in
+        return targetingSpecificsProvider.targetingSpecifics.filter { specific in
             selectedSpecifics
                 .map { $0.campaignChannels }
                 .compactMap { channels in
@@ -22,8 +25,11 @@ class CampaignBuilderService {
                 .contains(specific.campaignChannels)
         }
     }
-
     var selectedSpecifics = [TargetingSpecific]()
+    
+    init(targetingSpecificsProvider: TargetingSpecificsProviding) {
+        self.targetingSpecificsProvider = targetingSpecificsProvider
+    }
     
     func didSelectFilterAt(_ row: Int) {
         let selectedSpecific = filters[row]
@@ -36,17 +42,23 @@ class CampaignBuilderService {
     }
 }
 
-fileprivate func readTargetingSpecificsJSONFromFile() -> [TargetingSpecific] {
-    let fileName = "TargetingSpecifics.json"
-    guard let fileURL = Bundle.main.url(forResource: fileName, withExtension: nil) else {
-        fatalError("Couldn't find file \(fileName)")
-    }
-    do {
-        let data = try Data(contentsOf: fileURL)
-        let decoder = JSONDecoder()
-        return try decoder.decode([TargetingSpecific].self, from: data)
-    } catch let error {
-        print("Error decoding JSON: \(error)")
-        return []
+protocol TargetingSpecificsProviding {
+    var targetingSpecifics: [TargetingSpecific] { get }
+}
+
+struct LocalJSONDataLoader: TargetingSpecificsProviding {
+    var targetingSpecifics: [TargetingSpecific] {
+        let fileName = "TargetingSpecifics.json"
+        guard let fileURL = Bundle.main.url(forResource: fileName, withExtension: nil) else {
+            fatalError("Couldn't find file \(fileName)")
+        }
+        do {
+            let data = try Data(contentsOf: fileURL)
+            let decoder = JSONDecoder()
+            return try decoder.decode([TargetingSpecific].self, from: data)
+        } catch let error {
+            print("Error decoding JSON: \(error)")
+            return []
+        }
     }
 }

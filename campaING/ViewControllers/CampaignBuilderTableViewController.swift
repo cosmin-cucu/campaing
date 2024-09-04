@@ -8,27 +8,23 @@
 import UIKit
 
 final class CampaignBuilderTableViewController: UITableViewController {
-    let service: CampaignBuilderService = CampaignBuilderService()
+    let service: CampaignBuilderService = CampaignBuilderService(targetingSpecificsProvider: LocalJSONDataLoader())
     let viewModel: CampaignBuilderTableViewModel
-    let step: CampaignBuilderStep
     let coordinator: CampaignBuilderCoordinator?
     
     required override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        self.step = .chooseTargetingSpecifics
-        self.viewModel = .init(builderService: service)
+        self.viewModel = .init(builderService: service, step: .chooseTargetingSpecifics)
         self.coordinator = nil
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
     init?(coder: NSCoder, coordinator: CampaignBuilderCoordinator, step: CampaignBuilderStep = .chooseTargetingSpecifics) {
-        self.viewModel = .init(builderService: service)
-        self.step = step
+        self.viewModel = .init(builderService: service, step: step)
         self.coordinator = coordinator
         super.init(coder: coder)
     }
     
     required init?(coder: NSCoder) {
-        self.step = .chooseTargetingSpecifics
         self.viewModel = .init(builderService: service)
         self.coordinator = nil
         super.init(coder: coder)
@@ -51,31 +47,17 @@ final class CampaignBuilderTableViewController: UITableViewController {
 // MARK: Setup
 extension CampaignBuilderTableViewController {
     func setup() {
+        tableView.dataSource = viewModel
         setupNavigationItem()
     }
     
     func setupNavigationItem() {
-        navigationItem.title = step.title
-        navigationItem.rightBarButtonItem?.title = step.rightBarButtonTitle
+        navigationItem.title = viewModel.step.title
+        navigationItem.rightBarButtonItem?.title = viewModel.step.rightBarButtonTitle
         
-        if step.previous != nil {
+        if viewModel.step.previous != nil {
             navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(didTapPrevious))
         }
-    }
-}
-
-// MARK: UITableViewDataSource methods
-extension CampaignBuilderTableViewController {
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.numberOfFilters
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let targetingSpecificCell = tableView.dequeueReusableCell(withIdentifier: "TargetingSpecificCell", for: indexPath) as? TargetingSpecificCell else {
-            return UITableViewCell()
-        }
-        viewModel.customizeCell(targetingSpecificCell, for: indexPath.row)
-        return targetingSpecificCell
     }
 }
 

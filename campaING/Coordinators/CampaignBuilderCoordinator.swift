@@ -6,14 +6,8 @@
 //
 import UIKit
 
-enum BuilderStep {
-    case chooseTargetingSpecifics
-    case chooseCampaignChannel
-    case chooseCampaign
-}
-
-struct CampaignBuilderCoordinator: Coordinator {
-    private var currentStep: BuilderStep = .chooseTargetingSpecifics
+class CampaignBuilderCoordinator: NSObject, Coordinator {
+    private var currentStep: CampaignBuilderStep = .chooseTargetingSpecifics
     var navigationController: UINavigationController
     
     init(navigationController: UINavigationController) {
@@ -21,8 +15,32 @@ struct CampaignBuilderCoordinator: Coordinator {
     }
     
     func start() {
+        navigationController.pushViewController(newViewControllerFor(currentStep), animated: true)
+    }
+    
+    @objc func pushFlowToNextStep() {
+        guard let nextStep = currentStep.next else { return }
+        currentStep = nextStep
+        navigationController.pushViewController(newViewControllerFor(nextStep), animated: true)
+    }
+    
+    @objc func popFlowToPreviousStep() {
+        guard let previousStep = currentStep.previous else { return }
+        currentStep = previousStep
+        navigationController.popViewController(animated: true)
+    }
+}
+
+extension CampaignBuilderCoordinator {
+    func newViewControllerFor(_ step: CampaignBuilderStep) -> CampaignBuilderTableViewController {
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        let campaignBuilderTableViewController = mainStoryboard.instantiateViewController(withIdentifier: "CampaignBuilderTableViewController")
-        navigationController.pushViewController(campaignBuilderTableViewController, animated: true)
+        guard let campaignBuilderTableViewController = mainStoryboard.instantiateViewController(identifier: "CampaignBuilderTableViewController", creator: { coder in
+            let viewController = CampaignBuilderTableViewController(coder: coder, coordinator: self, step: step)
+            return viewController
+        }) as? CampaignBuilderTableViewController else {
+            fatalError("Could not instantiate CampaignBuilderTableViewController")
+        }
+        
+        return campaignBuilderTableViewController
     }
 }

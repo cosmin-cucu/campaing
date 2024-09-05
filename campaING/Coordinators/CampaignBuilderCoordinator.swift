@@ -16,14 +16,13 @@ class CampaignBuilderCoordinator: NSObject, Coordinator {
     }
     
     func start() {
-        let newViewController = newViewControllerFor(currentStep, dataType: TargetingSpecific.self)
-        navigationController.pushViewController(newViewController, animated: true)
+        presentNewStep()
     }
     
     @objc func pushFlowToNextStep() {
         guard let nextStep = currentStep.next else { return }
         currentStep = nextStep
-        navigationController.pushViewController(newViewControllerFor(nextStep, dataType: CampaignChannel.self), animated: true)
+        presentNewStep()
     }
     
     @objc func popFlowToPreviousStep() {
@@ -31,20 +30,28 @@ class CampaignBuilderCoordinator: NSObject, Coordinator {
         currentStep = previousStep
         navigationController.popViewController(animated: true)
     }
+    
+    private func presentNewStep() {
+        let type = currentStep.dataType
+        guard let newViewController = newViewControllerFor(type) else {
+            fatalError("Could not start the coorrdinator")
+        }
+        
+        navigationController.pushViewController(newViewController, animated: true)
+    }
 }
 
 extension CampaignBuilderCoordinator {
     func newViewControllerFor<T: CampaignBuildingRepresentableType>(
-        _ step: CampaignBuilderStep, dataType: T.Type) -> CampaignBuilderTableViewController<T> {
+        _ dataType: T.Type) -> UIViewController? {
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let campaignBuilderTableViewController = mainStoryboard.instantiateViewController(identifier: "CampaignBuilderTableViewController", creator: { [weak self] coder in
-            guard let self = self else { fatalError("Could not instantiate CampaignBuilderTableViewController") }
-            let viewController = CampaignBuilderTableViewController<T>(coder: coder, coordinator: self, step: step, buildingService: buildingService)
-            return viewController
-        }) as? CampaignBuilderTableViewController<T> else {
-            fatalError("Could not instantiate CampaignBuilderTableViewController")
-        }
+        let campaignBuilderTableViewController = mainStoryboard.instantiateViewController(identifier: "CampaignBuilderTableViewController", creator: customizedViewController) as? CampaignBuilderTableViewController<T>
         
         return campaignBuilderTableViewController
+    }
+    
+    func customizedViewController<T: CampaignBuildingRepresentableType>(_ coder: NSCoder) -> CampaignBuilderTableViewController<T>? {
+        let viewController = CampaignBuilderTableViewController<T>(coder: coder, coordinator: self, step: currentStep, buildingService: buildingService)
+        return viewController
     }
 }

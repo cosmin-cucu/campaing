@@ -19,14 +19,14 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="gray" indentationWidth="10" reuseIdentifier="CampaignBuilderTableViewCell" id="39b-gV-kGm" userLabel="CampaignBuildingFilterCell" customClass="CampaignBuilderTableViewCell" customModule="campaING" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="50" width="393" height="59.333332061767578"/>
+                                <rect key="frame" x="0.0" y="50" width="393" height="59.666667938232422"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="39b-gV-kGm" id="eZz-I8-gqR">
-                                    <rect key="frame" x="0.0" y="0.0" width="393" height="59.333332061767578"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="393" height="59.666667938232422"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KnQ-1e-a5y">
-                                            <rect key="frame" x="175.66666666666666" y="19" width="41.666666666666657" height="21.333333333333329"/>
+                                            <rect key="frame" x="175.66666666666666" y="19" width="41.666666666666657" height="21.666666666666671"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -137,8 +137,28 @@
                     <view key="view" contentMode="scaleToFill" id="Kvd-VT-wTM">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView verifyAmbiguity="off" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dPK-TD-8WO">
+                                <rect key="frame" x="76" y="362" width="240" height="128"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="XOx-Ge-hqi">
+                                        <rect key="frame" x="65" y="-36" width="110" height="200"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </stackView>
+                                </subviews>
+                                <viewLayoutGuide key="contentLayoutGuide" id="SC0-nF-Sdj"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="tqQ-MB-SZb"/>
+                            </scrollView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="V8V-Uz-7VX"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="V8V-Uz-7VX" firstAttribute="trailing" secondItem="dPK-TD-8WO" secondAttribute="trailing" id="62C-nq-vSb"/>
+                            <constraint firstItem="V8V-Uz-7VX" firstAttribute="bottom" secondItem="dPK-TD-8WO" secondAttribute="bottom" id="ifc-cV-LVs"/>
+                            <constraint firstItem="dPK-TD-8WO" firstAttribute="centerX" secondItem="Kvd-VT-wTM" secondAttribute="centerX" id="omv-sA-2YA"/>
+                            <constraint firstItem="dPK-TD-8WO" firstAttribute="top" secondItem="V8V-Uz-7VX" secondAttribute="top" id="sPz-zz-RVy"/>
+                            <constraint firstItem="dPK-TD-8WO" firstAttribute="leading" secondItem="V8V-Uz-7VX" secondAttribute="leading" id="weV-DM-f1m"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Summary" id="RmK-jA-XFS">
                         <barButtonItem key="rightBarButtonItem" title="Submit" id="CjQ-5B-7vJ">
@@ -147,10 +167,13 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="campaignsStackView" destination="XOx-Ge-hqi" id="wVa-jR-lq9"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4OV-L0-Iy4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-534" y="-1074"/>
+            <point key="canvasLocation" x="-553" y="-1125"/>
         </scene>
     </scenes>
     <resources>

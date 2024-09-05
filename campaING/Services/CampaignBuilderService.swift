@@ -56,7 +56,7 @@ class CampaignBuilderService: CampaignBuilderServiceProviding {
     private(set) var selectedSpecifics = [TargetingSpecific]()
     private(set) var availableSpecifics: [TargetingSpecific]
     var campaignChannels: [CampaignChannel] {
-        return Array(Set(selectedSpecifics.map(\.campaignChannels).flatMap{ $0 }))
+        return Set(selectedSpecifics.map(\.campaignChannels).flatMap{ $0 }).uniqued()
     }
     
     init(targetingSpecificsProvider: TargetingSpecificsProviding) {
@@ -83,7 +83,7 @@ class CampaignBuilderService: CampaignBuilderServiceProviding {
     }
     
     private func updateSpecificsWith(_ selectedSpecific: TargetingSpecific) {
-        if selectedSpecifics.contains(where: { $0 == selectedSpecific }) {
+        if selectedSpecifics.contains(selectedSpecific) {
             selectedSpecifics = selectedSpecifics.filter { $0 != selectedSpecific }
         } else {
             selectedSpecifics.append(selectedSpecific)
@@ -92,3 +92,9 @@ class CampaignBuilderService: CampaignBuilderServiceProviding {
     }
 }
 
+extension Sequence where Element: Hashable {
+    func uniqued() -> [Element] {
+        var set = Set<Element>()
+        return filter { set.insert($0).inserted }
+    }
+}

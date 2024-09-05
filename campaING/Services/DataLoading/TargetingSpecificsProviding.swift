@@ -14,14 +14,14 @@ protocol TargetingSpecificsProviding {
 extension TargetingSpecificsProviding {
     func availableSpecificsFor(_ selectedSpecifics: [TargetingSpecific]) -> [TargetingSpecific] {
         guard !selectedSpecifics.isEmpty else { return targetingSpecifics }
+        let selectedSpecificsCampaigns =
+            selectedSpecifics
+            .map { $0.campaignChannels }
+            .flatMap{ $0.compactMap{ $0 }}
+            .uniqued()
         
         return targetingSpecifics.filter { specific in
-            selectedSpecifics
-                .map { $0.campaignChannels }
-                .compactMap { channels in
-                    channels.compactMap { $0 }
-                }
-                .contains(specific.campaignChannels)
+            Set(selectedSpecificsCampaigns).isSubset(of: specific.campaignChannels)
         }
     }
 }

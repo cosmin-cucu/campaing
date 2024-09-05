@@ -7,7 +7,7 @@
 import UIKit
 
 protocol ChooseCampaignViewControllerDelegate: AnyObject {
-    func finishedSelection(_ campaign: Campaign?)
+    func finishedSelection(_ campaign: Campaign)
 }
 
 class ChooseCampaignViewController: UICollectionViewController {
@@ -23,7 +23,7 @@ class ChooseCampaignViewController: UICollectionViewController {
     }
     
     init?(coder: NSCoder, channel: CampaignChannel, campaignProvider: CampaignProviding) {
-        self.campaigns = campaignProvider.campaignsFor(channel.identifier)
+        self.campaigns = campaignProvider.campaignsFor(channel.identifier).sorted { $0.price < $1.price }
         super.init(coder: coder)
     }
     
@@ -31,11 +31,15 @@ class ChooseCampaignViewController: UICollectionViewController {
         fatalError("required init? not implemented!")
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        delegate?.finishedSelection(chosenCampaign)
-        super.viewDidDisappear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        collectionView.collectionViewLayout = newLayout()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+    }
+        
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return campaigns.count
     }
@@ -49,46 +53,53 @@ class ChooseCampaignViewController: UICollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        chosenCampaign = campaigns[indexPath.row]
-        print(chosenCampaign)
+        let campaign = campaigns[indexPath.row]
+        if campaign == chosenCampaign {
+            collectionView.deselectItem(at: indexPath, animated: true)
+            chosenCampaign = nil
+        } else {
+            chosenCampaign = campaign
+        }
+        
+        updateRightBarButton()
     }
     
+    func updateRightBarButton() {
+        guard chosenCampaign != nil else {
+            navigationItem.setRightBarButton(nil, animated: true)
+            return
+        }
+        
+        let barbutton = UIBarButtonItem(title: "Submit", style: .done, target: self, action: #selector(submitSelection))
+        navigationItem.setRightBarButton(barbutton, animated: true)
+    }
+    
+    @objc func submitSelection() {
+        guard let chosenCampaign else  { return }
+        navigationController?.dismiss(animated: true)
+        delegate?.finishedSelection(chosenCampaign)
+    }
+    
+    func newLayout() -> UICollectionViewCompositionalLayout {
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .fractionalHeight(1))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .estimated(view.frame.width / 2),
+            heightDimension: .estimated(600))
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: groupSize, subitems: [item])
+        group.edgeSpacing = NSCollectionLayoutEdgeSpacing(
+            leading: .flexible(8), top: .flexible(0),
+            trailing: .flexible(8), bottom: .flexible(0))
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 15
+        let config = UICollectionViewCompositionalLayoutConfiguration()
+        config.scrollDirection = .horizontal
+        let layout = UICollectionViewCompositionalLayout(
+            section: section, configuration:config)
+        return layout
+    }
 }
 
-protocol ChooseCampaignCellCustomizing {
-    func customize(_ cell: ChooseCampaignCollectionViewCell)
-}
-
-class ChooseCampaignCollectionViewCell: UICollectionViewCell {
-    @IBOutlet weak var priceLabel: UILabel!
-    @IBOutlet weak var listingsLabel: UILabel!
-    @IBOutlet weak var optimizationsLabel: UILabel!
-    @IBOutlet weak var featuresStackView: UIStackView!
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
-        let redView = UIView(frame: bounds)
-        redView.backgroundColor = #colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)
-        self.backgroundView = redView
-        
-        
-        let blueView = UIView(frame: bounds)
-        blueView.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 1, alpha: 1)
-        self.selectedBackgroundView = blueView
-    }
-    
-    override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
-        
-        setNeedsLayout()
-        layoutIfNeeded()
-        
-        let size = superview?.frame.size
-        
-        var frame = layoutAttributes.frame
-        frame.size = size ?? .zero
-        layoutAttributes.frame = frame
-        
-        return layoutAttributes
-    }
-}

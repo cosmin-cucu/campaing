@@ -10,9 +10,11 @@ class ChooseCampaignCoordinator: ChildCoordinator {
     weak var delegate: ChildCoordinatorDelegate?
     let channel: CampaignChannel
     let navigationController: UINavigationController
+    let service: CampaignBuilderServiceProviding
     
-    init(navigationController: UINavigationController, delegate: ChildCoordinatorDelegate, channel: CampaignChannel) {
-        self.navigationController = navigationController
+    init(service: CampaignBuilderServiceProviding, delegate: ChildCoordinatorDelegate, channel: CampaignChannel) {
+        self.service = service
+        self.navigationController = UINavigationController()
         self.delegate = delegate
         self.channel = channel
     }
@@ -20,7 +22,7 @@ class ChooseCampaignCoordinator: ChildCoordinator {
     func start() {
         let chooseCampaignViewController = ChooseCampaignViewController.instantiate(channel, campaignProvider: LocalJSONCampaignLoader())
         chooseCampaignViewController.delegate = self
-        navigationController.present(chooseCampaignViewController, animated: true)
+        navigationController.setViewControllers([chooseCampaignViewController], animated: false)
     }
     
     func attachChild(_ coordinator: any Coordinator) {
@@ -29,7 +31,8 @@ class ChooseCampaignCoordinator: ChildCoordinator {
 }
 
 extension ChooseCampaignCoordinator: ChooseCampaignViewControllerDelegate {
-    func finishedSelection(_ campaign: Campaign?) {
+    func finishedSelection(_ campaign: Campaign) {
+        service.didSelectOption(campaign)
         delegate?.coordinatorFinished(self)
     }
 }

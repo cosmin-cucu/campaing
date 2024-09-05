@@ -28,6 +28,7 @@ class CampaignBuilderCoordinator: ChildCoordinator, ChildCoordinatorDelegate {
     func attachChild(_ coordinator: any Coordinator) {
         childCoordinators.append(coordinator)
         coordinator.start()
+        navigationController.present(coordinator.navigationController, animated: true)
     }
     
     @objc func pushFlowToNextStep() {
@@ -53,7 +54,9 @@ class CampaignBuilderCoordinator: ChildCoordinator, ChildCoordinatorDelegate {
     }
     
     private func attachChildCoordinator(for step: CampaignBuilderStep) {
-        let child = ChooseCampaignCoordinator(navigationController: navigationController, delegate: self, channel: buildingService.selectedCampaignChannel!)
+        let child = ChooseCampaignCoordinator(service: buildingService,
+                                              delegate: self,
+                                              channel: buildingService.selectedCampaignChannel!)
         attachChild(child)
     }
     
@@ -67,13 +70,21 @@ class CampaignBuilderCoordinator: ChildCoordinator, ChildCoordinatorDelegate {
     }
     
     func coordinatorFinished(_ coordinator: any Coordinator) {
+        defer {
+            childCoordinators.removeLast()
+        }
+        
         if coordinator is ChooseCampaignCoordinator,
-           buildingService.selectedCampaign != nil{
-            pushFlowToNextStep()
+           !buildingService.selectedCampaigns.isEmpty {
+            updateRightBarButton()
         } else {
             childCoordinators.removeLast()
             popFlowToPreviousStep()
         }
+    }
+    
+    private func updateRightBarButton() {
+        navigationController.topViewController?.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(pushFlowToNextStep))
     }
 }
 

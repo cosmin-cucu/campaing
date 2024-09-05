@@ -11,45 +11,15 @@ protocol CampaignBuilding {
     var availableSpecifics: [TargetingSpecific] { get }
     var selectedSpecifics: [TargetingSpecific] { get }
     var selectedCampaignChannel: CampaignChannel? { get }
-    var selectedCampaign: Campaign? { get }
-    func didSelectOption(_ option: any CampaignBuilderFilteringDataType)
-}
-
-protocol CampaignBuilderDataProviding {
-    func dataFor(_ step: CampaignBuilderStep) -> [any CampaignBuilderFilteringDataType]
-    func selectedOptionsFor(_ step: CampaignBuilderStep) -> [any CampaignBuilderFilteringDataType]
-}
-
-extension CampaignBuilderDataProviding where Self: CampaignBuilding {
-    func dataFor(_ step: CampaignBuilderStep) -> [any CampaignBuilderFilteringDataType] {
-        switch step {
-        case .chooseTargetingSpecifics: return availableSpecifics
-        case .chooseCampaignChannel:
-            return selectedSpecifics.map(\.campaignChannels).flatMap { $0 }.uniqued().compactMap(CampaignChannel.init)
-        case .chooseCampaign:
-            fatalError("Summary has no data to provide. The campaign is built")
-        case .summary: fatalError("Summary has no data to provide. The campaign is built")
-        }
-    }
-    
-    func selectedOptionsFor(_ step: CampaignBuilderStep) -> [any CampaignBuilderFilteringDataType] {
-        switch step {
-        case .chooseTargetingSpecifics: return selectedSpecifics
-        case .chooseCampaignChannel:
-            guard let selectedCampaignChannel else {
-                return []
-            }
-            return [selectedCampaignChannel]
-        case .chooseCampaign, .summary: fatalError("Summary has no data to provide. The campaign is built")
-        }
-    }
+    var selectedCampaigns: [Campaign] { get }
+    func didSelectOption(_ option: any CampaignBuildingDataType)
 }
 
 protocol CampaignBuilderServiceProviding: CampaignBuilding, CampaignBuilderDataProviding {}
 
 class CampaignBuilderService: CampaignBuilderServiceProviding {
     var selectedCampaignChannel: CampaignChannel?
-    var selectedCampaign: Campaign?
+    var selectedCampaigns: [Campaign] = []
     private let targetingSpecificsProvider: TargetingSpecificsProviding
     private let campaignProvider: CampaignProviding
     private(set) var selectedSpecifics = [TargetingSpecific]()
@@ -61,13 +31,18 @@ class CampaignBuilderService: CampaignBuilderServiceProviding {
         self.availableSpecifics = targetingSpecificsProvider.targetingSpecifics
     }
     
-    func didSelectOption(_ option: any CampaignBuilderFilteringDataType) {
+    func didSelectOption(_ option: any CampaignBuildingDataType) {
         switch type(of: option) {
         case is TargetingSpecific.Type:
             updateSpecificsWith(option as! TargetingSpecific)
         case is CampaignChannel.Type:
             selectedCampaignChannel = option as? CampaignChannel
-            print(campaignProvider.campaignsFor(selectedCampaignChannel!.identifier))
+        case is Campaign.Type:
+            if selectedCampaigns.contains(option as! Campaign) {
+                selectedCampaigns = selectedCampaigns.filter { $0 != option as! Campaign }
+            } else {
+                selectedCampaigns.append(option as! Campaign)
+            }
         default:
             break
         }

@@ -7,6 +7,19 @@
 
 import Foundation
 
-struct CampaignChannel: Codable, Hashable, CampaignFilteringUIRepresentableType {
-    let name: String
+struct CampaignChannel: Codable, Hashable, BuilderTableViewRepresentableType {
+    let identifier: String
+    let campaigns: [Campaign]?
+    
+    
+    init(identifier: String) {
+        self.identifier = identifier
+        campaigns = nil
+    }
+}
+
+extension CampaignChannel {
+    var name: String {
+        return identifier
+    }
 }

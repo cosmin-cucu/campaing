@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CampaignBuilderTableViewModel<T: CampaignFilteringUIRepresentableType>: NSObject, UITableViewDataSource {
+class CampaignBuilderTableViewModel<T: BuilderTableViewRepresentableType>: NSObject, UITableViewDataSource {
     let step: CampaignBuilderStep
     let dataProvider: CampaignBuilderDataProviding
     
@@ -16,7 +16,7 @@ class CampaignBuilderTableViewModel<T: CampaignFilteringUIRepresentableType>: NS
         self.step = step
     }
     
-    func customizeCell(_ cell: CampaignBuildingFilterCell, for row: Int) {
+    func customizeCell(_ cell: CampaignBuilderTableViewCell, for row: Int) {
         guard let element = dataProvider.dataFor(step)[row] as? (T),
         let selectedElements = dataProvider.selectedOptionsFor(step) as? [T] else { return }
         let isCellSelected = selectedElements.contains(element)
@@ -29,7 +29,7 @@ class CampaignBuilderTableViewModel<T: CampaignFilteringUIRepresentableType>: NS
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let targetingSpecificCell = tableView.dequeueReusableCell(withIdentifier: "CampaignBuildingFilterCell", for: indexPath) as? CampaignBuildingFilterCell else {
+        guard let targetingSpecificCell = tableView.dequeueReusableCell(withIdentifier: "CampaignBuilderTableViewCell", for: indexPath) as? CampaignBuilderTableViewCell else {
             return UITableViewCell()
         }
         customizeCell(targetingSpecificCell, for: indexPath.row)

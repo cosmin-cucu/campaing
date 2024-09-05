@@ -7,35 +7,43 @@
 
 import UIKit
 
-protocol CampaignFilteringUIRepresentableType: CampaignBuildingFilterCellCustomizing & CampaignBuilderFilteringDataType {}
+protocol BuilderTableViewRepresentableType: CampaignBuilderCellCustomizing & CampaignBuilderFilteringDataType {}
 
-final class FilterTableViewController<T: CampaignFilteringUIRepresentableType>: UITableViewController {
+final class BuilderTableViewController<T: BuilderTableViewRepresentableType>: UITableViewController {
     let service: CampaignBuilderServiceProviding
     let viewModel: CampaignBuilderTableViewModel<T>
     let coordinator: CampaignBuilderCoordinator?
-    let configuration: CampaignFilterViewControllerConfigurating
+    let configuration: BuilderTableViewControllerConfigurating
     
     required override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        self.service = CampaignBuilderService(targetingSpecificsProvider: LocalJSONTargetingSpecificsLoader())
+        self.service = CampaignBuilderService(targetingSpecificsProvider: LocalJSONTargetingSpecificsLoader(),
+                                              campaignProvider: LocalJSONCampaignLoader())
         self.viewModel = .init(dataProvider: service, step: .chooseTargetingSpecifics)
         self.coordinator = nil
-        self.configuration = CampaignBuilderStep.chooseTargetingSpecifics.filterViewControllerConfiguration
+        self.configuration = BuilderTableViewConfiguration(.chooseTargetingSpecifics)
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
     init?(coder: NSCoder, coordinator: CampaignBuilderCoordinator, step: CampaignBuilderStep = .chooseTargetingSpecifics, buildingService: CampaignBuilderServiceProviding) {
+        guard let configuration = step.viewControllerConfiguration as? BuilderTableViewControllerConfigurating else {
+            fatalError("Could not instantiate the configuration!")
+        }
         self.service = buildingService
         self.viewModel = .init(dataProvider: service, step: step)
         self.coordinator = coordinator
-        self.configuration = step.filterViewControllerConfiguration
+        self.configuration = configuration
         super.init(coder: coder)
     }
     
     required init?(coder: NSCoder) {
-        self.service = CampaignBuilderService(targetingSpecificsProvider: LocalJSONTargetingSpecificsLoader())
+        guard let configuration = CampaignBuilderStep.chooseTargetingSpecifics.viewControllerConfiguration as? BuilderTableViewControllerConfigurating else {
+            fatalError("Could not instantiate the configuration!")
+        }
+        self.service = CampaignBuilderService(targetingSpecificsProvider: LocalJSONTargetingSpecificsLoader(),
+                                              campaignProvider: LocalJSONCampaignLoader())
         self.viewModel = .init(dataProvider: service, step: .chooseTargetingSpecifics)
         self.coordinator = nil
-        self.configuration = CampaignBuilderStep.chooseTargetingSpecifics.filterViewControllerConfiguration
+        self.configuration = configuration
         super.init(coder: coder)
     }
     
@@ -61,7 +69,7 @@ final class FilterTableViewController<T: CampaignFilteringUIRepresentableType>: 
 }
 
 // MARK: Setup
-extension FilterTableViewController {
+extension BuilderTableViewController {
     func setup() {
         tableView.dataSource = viewModel
         setupNavigationItem()
@@ -71,13 +79,11 @@ extension FilterTableViewController {
         navigationItem.title = configuration.title
         if configuration.shouldShowRightBarbutton {
             navigationItem.rightBarButtonItem = UIBarButtonItem(title: configuration.rightBarButtonTitle, style: .plain, target: self, action: #selector(didTapNext))
+            navigationItem.rightBarButtonItem?.isHidden = true
         }
+
         if configuration.shouldShowLeftBarbutton {
             navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(didTapPrevious))
-        }
-        
-        if viewModel.step.previous != nil {
-            
         }
     }
 }

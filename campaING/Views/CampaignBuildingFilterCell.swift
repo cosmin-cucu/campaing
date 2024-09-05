@@ -7,17 +7,17 @@
 
 import UIKit
 
-final class CampaignBuildingFilterCell: UITableViewCell {
+final class CampaignBuilderTableViewCell: UITableViewCell {
     @IBOutlet weak var nameLabel: UILabel!
 }
 
-protocol CampaignBuildingFilterCellCustomizing {
+protocol CampaignBuilderCellCustomizing {
     var name: String { get }
-    func customize(_ cell: CampaignBuildingFilterCell, isSelected: Bool)
+    func customize(_ cell: CampaignBuilderTableViewCell, isSelected: Bool)
 }
 
-extension CampaignBuildingFilterCellCustomizing {
-    func customize(_ cell: CampaignBuildingFilterCell, isSelected: Bool) {
+extension CampaignBuilderCellCustomizing {
+    func customize(_ cell: CampaignBuilderTableViewCell, isSelected: Bool) {
         cell.nameLabel.text = name
         cell.backgroundColor = isSelected ? .systemGray5 : .clear
     }

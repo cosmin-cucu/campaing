@@ -7,20 +7,25 @@
 import UIKit
 
 protocol Coordinator {
-    var navigationController: UINavigationController { get set }
+    var navigationController: UINavigationController { get }
     func start()
+    func attachChild(_ coordinator: Coordinator)
 }
 
-struct MainCoordinator: Coordinator {
+class MainCoordinator: Coordinator {
     private var childCoordinators: [Coordinator]
-    var navigationController: UINavigationController
+    let navigationController = UINavigationController()
     
     init() {
-        self.navigationController = UINavigationController()
         childCoordinators = [CampaignBuilderCoordinator(navigationController: navigationController)]
     }
     
     func start() {
         childCoordinators.forEach { $0.start() }
+    }
+    
+    func attachChild(_ coordinator: any Coordinator) {
+        childCoordinators.append(coordinator)
+        coordinator.start()
     }
 }

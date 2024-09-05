@@ -8,11 +8,14 @@ import UIKit
 
 class CampaignBuilderCoordinator: NSObject, Coordinator {
     private var currentStep: CampaignBuilderStep = .chooseTargetingSpecifics
-    let buildingService: CampaignBuilderServiceProviding = CampaignBuilderService(targetingSpecificsProvider: LocalJSONTargetingSpecificsLoader())
+    private var childCoordinators: [Coordinator] = []
+    let buildingService: CampaignBuilderService
     var navigationController: UINavigationController
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
+        self.buildingService = CampaignBuilderService(targetingSpecificsProvider: LocalJSONTargetingSpecificsLoader(),
+                                                      campaignProvider: LocalJSONCampaignLoader())
     }
     
     func start() {
@@ -31,8 +34,12 @@ class CampaignBuilderCoordinator: NSObject, Coordinator {
         navigationController.popViewController(animated: true)
     }
     
+    func attachChild(_ coordinator: any Coordinator) {
+        
+    }
+    
     private func presentNewStep() {
-        let type = currentStep.dataType
+        guard let type = currentStep.dataType else { return }
         guard let newViewController = newFilteringViewController(type) else {
             fatalError("Could not start the coorrdinator")
         }
@@ -42,16 +49,16 @@ class CampaignBuilderCoordinator: NSObject, Coordinator {
 }
 
 extension CampaignBuilderCoordinator {
-    func newFilteringViewController<T: CampaignFilteringUIRepresentableType>(
+    func newFilteringViewController<T: BuilderTableViewRepresentableType>(
         _ dataType: T.Type) -> UIViewController? {
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        let campaignBuilderTableViewController = mainStoryboard.instantiateViewController(identifier: "FilterTableViewController", creator: customizedViewController) as? FilterTableViewController<T>
+        let campaignBuilderTableViewController = mainStoryboard.instantiateViewController(identifier: "BuilderTableViewController", creator: customizedViewController) as? BuilderTableViewController<T>
         
         return campaignBuilderTableViewController
     }
     
-    func customizedViewController<T: CampaignFilteringUIRepresentableType>(_ coder: NSCoder) -> FilterTableViewController<T>? {
-        let viewController = FilterTableViewController<T>(coder: coder, coordinator: self, step: currentStep, buildingService: buildingService)
+    func customizedViewController<T: BuilderTableViewRepresentableType>(_ coder: NSCoder) -> BuilderTableViewController<T>? {
+        let viewController = BuilderTableViewController<T>(coder: coder, coordinator: self, step: currentStep, buildingService: buildingService)
         return viewController
     }
 }

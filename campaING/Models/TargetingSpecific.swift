@@ -5,7 +5,7 @@
 //  Created by Cosmin Cucu on 18/8/24.
 //
 
-struct TargetingSpecific: Codable, Equatable, CampaignFilteringUIRepresentableType {
+struct TargetingSpecific: Codable, Equatable, BuilderTableViewRepresentableType {
     let name: String
-    let campaignChannels: [CampaignChannel]
+    let campaignChannels: [String]
 }

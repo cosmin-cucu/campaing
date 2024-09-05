@@ -1,0 +1,302 @@
+[
+    {
+        "identifier": "Facebook",
+        "campaigns": [
+            {
+                "price": 140,
+                "listings": "3-8",
+                "optimizations": 12,
+                "features": [
+                    "Campaign setup",
+                    "Admin and optimising",
+                    "Email support",
+                    "Monthly reports",
+                    "Install",
+                    "Conversion monitoring",
+                    "Landing page"
+                ]
+            },
+            {
+                "price": 200,
+                "listings": "8-15",
+                "optimizations": 20,
+                "features": [
+                    "Campaign setup",
+                    "Admin and optimising",
+                    "Email support",
+                    "Monthly reports",
+                    "Install",
+                    "Conversion monitoring",
+                    "Landing page",
+                    "Phone support",
+                    "Remarketing"
+                ]
+            },
+            {
+                "price": 100,
+                "listings": "1-3",
+                "optimizations": 8,
+                "features": [
+                    "Campaign setup",
+                    "Admin and optimising",
+                    "Email support",
+                    "Monthly reports",
+                    "Install",
+                    "Conversion monitoring"
+                ]
+            },
+            {
+                "price": 75,
+                "listings": "1",
+                "optimizations": 8,
+                "features": [
+                    "Campaign setup",
+                    "Admin and optimising",
+                    "Email support",
+                    "Monthly reports"
+                ]
+            }
+        ]
+    },
+    {
+        "identifier": "LinkedIn",
+        "campaigns": [
+            {
+                "price": 150,
+                "listings": "5-8",
+                "features": [
+                    "Campaign setup",
+                    "Admin and optimising",
+                    "Email support",
+                    "Monthly reports",
+                    "Phone support"
+                ]
+            },
+            {
+                "price": 180,
+                "listings": "8-10",
+                "features": [
+                    "Campaign setup",
+                    "Admin and optimising",
+                    "Email support",
+                    "Monthly reports",
+                    "Phone support"
+                ]
+            },
+            {
+                "price": 90,
+                "listings": "10-15",
+                "features": [
+                    "Campaign setup",
+                    "Admin and optimising",
+                    "Email support",
+                    "Monthly reports"
+                ]
+            },
+            {
+                "price": 60,
+                "listings": "15-20",
+                "features": [
+                    "Campaign setup",
+                    "Admin and optimising",
+                    "Email support"
+                ]
+            }
+        ]
+    },
+    {
+        "identifier": "Twitter",
+        "campaigns": [
+            {
+                "price": 170,
+                "listings": "10-15 ",
+                "features": [
+                    "Campaign setup",
+                    "Campaign auc2oning",
+                    "Targeted tweets",
+                    "Email support",
+                    "Admin and optimising",
+                    "Monthly reports"
+                ]
+            },
+            {
+                "price": 250,
+                "listings": "15-20",
+                "features": [
+                    "Campaign setup",
+                    "Campaign auc2oning",
+                    "Targeted tweets",
+                    "Email support",
+                    "Admin and optimising",
+                    "Monthly reports",
+                    "Phone support"
+                ]
+            },
+            {
+                "price": 120,
+                "listings": "5-10",
+                "features": [
+                    "Campaign setup",
+                    "Campaign auc2oning",
+                    "Targeted tweets",
+                    "Email support",
+                    "Admin and optimising"
+                ]
+            },
+            {
+                "price": 80,
+                "listings": "1-5",
+                "features": [
+                    "Campaign setup",
+                    "Campaign auc2oning",
+                    "Targeted tweets",
+                    "Email support"
+                ]
+            }
+        ]
+    },
+    {
+        "identifier": "Instagram",
+        "campaigns": [
+            {
+                "price": 180,
+                "listings": "5-8",
+                "optimizations": 4,
+                "features": [
+                    "Campaign setup",
+                    "Campaign testing",
+                    "Campaign analysis",
+                    "Email support"
+                ]
+            },
+            {
+                "price": 270,
+                "listings": "10-12",
+                "optimizations": 8,
+                "features": [
+                    "Campaign setup",
+                    "Campaign testing",
+                    "Campaign analysis",
+                    "Monitoring",
+                    "Email support",
+                    "Phone support"
+                ]
+            },
+            {
+                "price": 130,
+                "listings": "1-4",
+                "optimizations": 2,
+                "features": [
+                    "Campaign setup",
+                    "Campaign analysis",
+                    "Email support"
+                ]
+            },
+            {
+                "price": 80,
+                "listings": "1",
+                "features": [
+                    "Campaign setup",
+                    "Email support"
+                ]
+            }
+        ]
+    },
+    {
+        "identifier": "Google AdWords",
+        "campaigns": [
+            {
+                "price": 150,
+                "optimizations": 3,
+                "features": [
+                    "Campaign setup",
+                    "Campaign analysis",
+                    "Content creation",
+                    "Admin and monitoring",
+                    "Email support"
+                ]
+            },
+            {
+                "price": 230,
+                "optimizations": 5,
+                "features": [
+                    "Campaign setup",
+                    "Content creation",
+                    "Admin and monitoring",
+                    "Monthly reports",
+                    "Email support",
+                    "Phone support"
+                ]
+            },
+            {
+                "price": 90,
+                "optimizations": 1,
+                "features": [
+                    "Campaign setup",
+                    "Content creation",
+                    "Email support"
+                ]
+            }
+        ]
+    },
+    {
+        "identifier": "SEO",
+        "campaigns": [
+            {
+                "price": 270,
+                "features": [
+                    "Scope setup",
+                    "Market research",
+                    "Keywords research",
+                    "Content analysis",
+                    "Hyperlinks analysis",
+                    "Local SEO",
+                    "Website optimization",
+                    "Backlink setup",
+                    "Campaign analysis",
+                    "Email support"
+                ]
+            },
+            {
+                "price": 320,
+                "features": [
+                    "Scope setup",
+                    "Market research",
+                    "Keywords research",
+                    "Content analysis",
+                    "Hyperlinks analysis",
+                    "Local SEO",
+                    "Audit SEO",
+                    "Website optimization",
+                    "Backlink setup",
+                    "Campaign Analysis",
+                    "Email support"
+                ]
+            },
+            {
+                "price": 180,
+                "features": [
+                    "Scope setup",
+                    "Market research",
+                    "Keywords research",
+                    "Content analysis",
+                    "Hyperlinks analysis",
+                    "Local SEO",
+                    "Backlink setup",
+                    "Email support"
+                ]
+            },
+            {
+                "price": 110,
+                "features": [
+                    "Scope setup",
+                    "Market research",
+                    "Keywords research",
+                    "Content analysis",
+                    "Local SEO",
+                    "Email support"
+                ]
+            }
+        ]
+    }
+]

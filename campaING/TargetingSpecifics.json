@@ -2,108 +2,108 @@
     {
         "name": "Location",
         "campaignChannels": [
-            {"name": "Facebook"},
-            {"name": "Linkedin"},
-            {"name": "Twitter"},
-            {"name": "Instagram"},
-            {"name": "Google AdWords"}
+            "Facebook",
+            "Linkedin",
+            "Twitter",
+            "Instagram",
+            "Google AdWords"
         ]
     },
     {
         "name": "Age",
         "campaignChannels": [
-            {"name": "Facebook"},
-            {"name": "Linkedin"},
-            {"name": "Twitter"},
-            {"name": "Instagram"},
-            {"name": "Google AdWords"}
+            "Facebook",
+            "Linkedin",
+            "Twitter",
+            "Instagram",
+            "Google AdWords"
         ]
     },
     {
         "name": "Sex",
         "campaignChannels": [
-            {"name": "Facebook"},
-            {"name": "Linkedin"},
-            {"name": "Twitter"},
-            {"name": "Instagram"},
-            {"name": "Google AdWords"}
+            "Facebook",
+            "Linkedin",
+            "Twitter",
+            "Instagram",
+            "Google AdWords"
         ]
     },
     {
         "name": "Spoken languages",
         "campaignChannels": [
-            {"name": "Facebook"},
-            {"name": "Twitter"},
-            {"name": "Instagram"}
+            "Facebook",
+            "Twitter",
+            "Instagram"
         ]
     },
     {
         "name": "Events",
         "campaignChannels": [
-            {"name": "Facebook"},
-            {"name": "Twitter"}
+            "Facebook",
+            "Twitter"
         ]
     },
     {
         "name": "Company",
         "campaignChannels": [
-            {"name": "LinkedIn"}
+            "LinkedIn"
         ]
     },
     {
         "name": "Industry",
         "campaignChannels": [
-            {"name": "LinkedIn"},
-            {"name": "SEO"}
+            "LinkedIn",
+            "SEO"
         ]
     },
     {
         "name": "Expertise",
         "campaignChannels": [
-            {"name": "LinkedIn"}
+            "LinkedIn"
         ]
     },
     {
         "name": "Education",
         "campaignChannels": [
-            {"name": "LinkedIn"}
+            "LinkedIn"
         ]
     },
     {
         "name": "Technology",
         "campaignChannels": [
-            {"name": "Twitter"}
+            "Twitter"
         ]
     },
     {
         "name": "Interests",
         "campaignChannels": [
-            {"name": "Instagram"}
+            "Instagram"
         ]
     },
     {
         "name": "Device",
         "campaignChannels": [
-            {"name": "Google AdWords"}
+            "Google AdWords"
         ]
     },
     {
         "name": "Keywords",
         "campaignChannels": [
-            {"name": "Google AdWords"},
-            {"name": "SEO"}
+            "Google AdWords",
+            "SEO"
         ]
     },
     {
         "name": "Similar products / services",
         "campaignChannels": [
-            {"name": "Google AdWords"}
+            "Google AdWords"
         ]
     },
     {
         "name": "Hyperlinks",
         "campaignChannels": [
-            {"name": "SEO"}
+            "SEO"
         ]
     }
 ]

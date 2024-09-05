@@ -16,7 +16,6 @@ protocol CampaignBuilding {
 }
 
 protocol CampaignBuilderDataProviding {
-    func campaignsFor(_ channel: CampaignChannel) -> [Campaign]
     func dataFor(_ step: CampaignBuilderStep) -> [any CampaignBuilderFilteringDataType]
     func selectedOptionsFor(_ step: CampaignBuilderStep) -> [any CampaignBuilderFilteringDataType]
 }
@@ -25,10 +24,10 @@ extension CampaignBuilderDataProviding where Self: CampaignBuilding {
     func dataFor(_ step: CampaignBuilderStep) -> [any CampaignBuilderFilteringDataType] {
         switch step {
         case .chooseTargetingSpecifics: return availableSpecifics
-        case .chooseCampaignChannel: return selectedSpecifics.map(\.campaignChannels).flatMap { $0 }.uniqued()
+        case .chooseCampaignChannel:
+            return selectedSpecifics.map(\.campaignChannels).flatMap { $0 }.uniqued().compactMap(CampaignChannel.init)
         case .chooseCampaign:
-            guard let selectedCampaignChannel else { return [] }
-            return campaignsFor(selectedCampaignChannel)
+            fatalError("Summary has no data to provide. The campaign is built")
         case .summary: fatalError("Summary has no data to provide. The campaign is built")
         }
     }
@@ -52,11 +51,13 @@ class CampaignBuilderService: CampaignBuilderServiceProviding {
     var selectedCampaignChannel: CampaignChannel?
     var selectedCampaign: Campaign?
     private let targetingSpecificsProvider: TargetingSpecificsProviding
+    private let campaignProvider: CampaignProviding
     private(set) var selectedSpecifics = [TargetingSpecific]()
     private(set) var availableSpecifics: [TargetingSpecific]
     
-    init(targetingSpecificsProvider: TargetingSpecificsProviding) {
+    init(targetingSpecificsProvider: TargetingSpecificsProviding, campaignProvider: CampaignProviding) {
         self.targetingSpecificsProvider = targetingSpecificsProvider
+        self.campaignProvider = campaignProvider
         self.availableSpecifics = targetingSpecificsProvider.targetingSpecifics
     }
     
@@ -66,15 +67,10 @@ class CampaignBuilderService: CampaignBuilderServiceProviding {
             updateSpecificsWith(option as! TargetingSpecific)
         case is CampaignChannel.Type:
             selectedCampaignChannel = option as? CampaignChannel
-        case is Campaign.Type:
-            selectedCampaign = option as? Campaign
+            print(campaignProvider.campaignsFor(selectedCampaignChannel!.identifier))
         default:
             break
         }
-    }
-    
-    func campaignsFor(_ channel: CampaignChannel) -> [Campaign] {
-        return []
     }
     
     private func updateSpecificsWith(_ selectedSpecific: TargetingSpecific) {

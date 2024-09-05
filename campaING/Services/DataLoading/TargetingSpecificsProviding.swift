@@ -17,7 +17,7 @@ extension TargetingSpecificsProviding {
         let selectedSpecificsCampaigns =
                 selectedSpecifics
                 .map { Set($0.campaignChannels) }
-                .reduce(Set<CampaignChannel>(selectedSpecifics.first?.campaignChannels ?? []))  { partialResult, set -> Set<CampaignChannel> in
+                .reduce(Set<String>(selectedSpecifics.first?.campaignChannels ?? []))  { partialResult, set -> Set<String> in
                     return partialResult.intersection(set)
                 }
         
@@ -28,13 +28,10 @@ extension TargetingSpecificsProviding {
 }
 
 struct LocalJSONTargetingSpecificsLoader: TargetingSpecificsProviding {
+    let jsonFile = "TargetingSpecifics.json"
     var targetingSpecifics: [TargetingSpecific] {
-        let fileName = "TargetingSpecifics.json"
-        guard let fileURL = Bundle.main.url(forResource: fileName, withExtension: nil) else {
-            fatalError("Couldn't find file \(fileName)")
-        }
         do {
-            let data = try Data(contentsOf: fileURL)
+            let data = try JSONReader.read(jsonFile)
             let decoder = JSONDecoder()
             return try decoder.decode([TargetingSpecific].self, from: data)
         } catch let error {

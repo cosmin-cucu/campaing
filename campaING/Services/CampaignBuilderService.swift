@@ -11,7 +11,7 @@ protocol CampaignBuilding {
     var availableSpecifics: [TargetingSpecific] { get }
     var selectedSpecifics: [TargetingSpecific] { get }
     var selectedCampaignChannel: CampaignChannel? { get }
-    var selectedCampaigns: [Campaign] { get }
+    var selectedCampaigns: [CampaignChannel: Campaign] { get }
     func didSelectOption(_ option: any CampaignBuildingDataType)
 }
 
@@ -19,7 +19,7 @@ protocol CampaignBuilderServiceProviding: CampaignBuilding, CampaignBuilderDataP
 
 class CampaignBuilderService: CampaignBuilderServiceProviding {
     var selectedCampaignChannel: CampaignChannel?
-    var selectedCampaigns: [Campaign] = []
+    var selectedCampaigns: [CampaignChannel: Campaign] = [:]
     private let targetingSpecificsProvider: TargetingSpecificsProviding
     private let campaignProvider: CampaignProviding
     private(set) var selectedSpecifics = [TargetingSpecific]()
@@ -38,13 +38,19 @@ class CampaignBuilderService: CampaignBuilderServiceProviding {
         case is CampaignChannel.Type:
             selectedCampaignChannel = option as? CampaignChannel
         case is Campaign.Type:
-            if selectedCampaigns.contains(option as! Campaign) {
-                selectedCampaigns = selectedCampaigns.filter { $0 != option as! Campaign }
-            } else {
-                selectedCampaigns.append(option as! Campaign)
-            }
+            updateSelectedCampaingsWith(option as! Campaign)
         default:
             break
+        }
+    }
+    
+    private func updateSelectedCampaingsWith(_ campaign: Campaign) {
+        guard let selectedCampaignChannel else { return }
+        if let campaign = selectedCampaigns[selectedCampaignChannel],
+           campaign == campaign {
+            selectedCampaigns[selectedCampaignChannel] = nil
+        } else {
+            selectedCampaigns[selectedCampaignChannel] = campaign
         }
     }
     

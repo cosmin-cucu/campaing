@@ -12,9 +12,9 @@ class ChooseCampaignCoordinator: ChildCoordinator {
     let navigationController: UINavigationController
     let service: CampaignBuilderServiceProviding
     
-    init(service: CampaignBuilderServiceProviding, delegate: ChildCoordinatorDelegate, channel: CampaignChannel) {
+    init(service: CampaignBuilderServiceProviding, delegate: ChildCoordinatorDelegate, channel: CampaignChannel, navigationController: UINavigationController) {
         self.service = service
-        self.navigationController = UINavigationController()
+        self.navigationController = navigationController
         self.delegate = delegate
         self.channel = channel
     }
@@ -22,7 +22,8 @@ class ChooseCampaignCoordinator: ChildCoordinator {
     func start() {
         let chooseCampaignViewController = ChooseCampaignViewController.instantiate(channel, campaignProvider: LocalJSONCampaignLoader())
         chooseCampaignViewController.delegate = self
-        navigationController.setViewControllers([chooseCampaignViewController], animated: false)
+        let newNavigationController = UINavigationController(rootViewController: chooseCampaignViewController)
+        navigationController.present(newNavigationController, animated: true)
     }
     
     func attachChild(_ coordinator: any Coordinator) {

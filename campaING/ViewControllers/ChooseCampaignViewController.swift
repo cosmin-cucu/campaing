@@ -102,4 +102,3 @@ class ChooseCampaignViewController: UICollectionViewController {
         return layout
     }
 }
-

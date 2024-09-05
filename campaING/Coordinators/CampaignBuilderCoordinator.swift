@@ -28,7 +28,6 @@ class CampaignBuilderCoordinator: ChildCoordinator, ChildCoordinatorDelegate {
     func attachChild(_ coordinator: any Coordinator) {
         childCoordinators.append(coordinator)
         coordinator.start()
-        navigationController.present(coordinator.navigationController, animated: true)
     }
     
     @objc func pushFlowToNextStep() {
@@ -46,17 +45,27 @@ class CampaignBuilderCoordinator: ChildCoordinator, ChildCoordinatorDelegate {
     }
     
     private func presentNewStep() {
-        if currentStep.isFilteringStep {
-            presentNewFilteringViewController()
-        } else {
-            attachChildCoordinator(for: currentStep)
+        guard currentStep != .chooseCampaign else {
+            attachChooseCampaignCoordinator()
+            return
         }
+        guard currentStep.next != nil else {
+            presentSummary()
+            return
+        }
+        presentNewFilteringViewController()
     }
     
-    private func attachChildCoordinator(for step: CampaignBuilderStep) {
+    private func presentSummary() {
+        let viewController = ChosenCampaignsSummaryViewController.instantiate(self, buildingService.selectedCampaigns)
+        navigationController.pushViewController(viewController, animated: true)
+    }
+    
+    private func attachChooseCampaignCoordinator() {
         let child = ChooseCampaignCoordinator(service: buildingService,
                                               delegate: self,
-                                              channel: buildingService.selectedCampaignChannel!)
+                                              channel: buildingService.selectedCampaignChannel!,
+                                              navigationController: navigationController)
         attachChild(child)
     }
     
@@ -103,4 +112,14 @@ extension CampaignBuilderCoordinator {
     }
 }
 
-
+extension CampaignBuilderCoordinator: ChosenCampaignsSummaryViewControllerDelegate {
+    func summaryViewControllerWasDismissed() {
+        guard currentStep == .summary else { return }
+        currentStep = .chooseCampaignChannel
+    }
+    
+    func submitCampaigns() {
+        let submitCampaignCoordinator = SubmitCampaignCoordinator(delegate: self, service: CampaignSubmitter(), campaigns: buildingService.selectedCampaigns, navigationController: navigationController)
+        attachChild(submitCampaignCoordinator)
+    }
+}

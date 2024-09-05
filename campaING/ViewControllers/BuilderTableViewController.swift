@@ -52,7 +52,7 @@ final class BuilderTableViewController<T: BuilderTableViewRepresentableType>: UI
         setup()
     }
     
-    @IBAction func didTapNext(_ sender: Any) {
+    @objc func didTapNext(_ sender: Any) {
         coordinator?.pushFlowToNextStep()
     }
     

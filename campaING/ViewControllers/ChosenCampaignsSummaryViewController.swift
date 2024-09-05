@@ -5,6 +5,7 @@
 //  Created by Cosmin Cucu on 5/9/24.
 //
 import UIKit
+import WebKit
 
 protocol StackViewRepresentable {
     func newStackViewSubviews() -> [UIView]
@@ -56,8 +57,8 @@ extension Campaign: StackViewRepresentable {
 
 class ChosenCampaignsSummaryViewController: UIViewController {
     weak var delegate: ChosenCampaignsSummaryViewControllerDelegate?
-    @IBOutlet weak var campaignsStackView: UIStackView!
     let campaigns: [CampaignChannel: Campaign]
+    @IBOutlet weak var summaryWebview: WKWebView!
     
     
     required init?(coder: NSCoder) {
@@ -66,31 +67,20 @@ class ChosenCampaignsSummaryViewController: UIViewController {
     }
     
     init?(coder: NSCoder, campaigns: [CampaignChannel: Campaign], delegate: ChosenCampaignsSummaryViewControllerDelegate? = nil) {
+        self.delegate = delegate
         self.campaigns = campaigns
         super.init(coder: coder)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        campaigns.forEach(addNewStack)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        summaryWebview.loadHTMLString(campaigns.toHTML(), baseURL: nil)
     }
     
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         delegate?.summaryViewControllerWasDismissed()
-    }
-    
-    private func addNewStack(channel: CampaignChannel, campaign: Campaign) {
-        let channelSubviews = channel.newStackViewSubviews()
-        let campaignSubviews = campaign.newStackViewSubviews()
-        let detailsStack = UIStackView(arrangedSubviews: channelSubviews + [campaignSubviews.first!])
-        detailsStack.axis = .vertical
-        
-        let featuresStack = UIStackView(arrangedSubviews: [campaignSubviews.last!])
-        let stack = UIStackView(arrangedSubviews: [detailsStack, featuresStack])
-        
-        campaignsStackView.addArrangedSubview(stack)
     }
     
     @IBAction func didPressSubmit(_ sender: Any) {

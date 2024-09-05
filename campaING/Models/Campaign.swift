@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Campaign: Codable, Hashable, Equatable, CampaignBuildingRepresentableType {
+struct Campaign: Codable, Hashable, Equatable, CampaignFilteringUIRepresentableType {
     var name: String
     let details: [String]
 }

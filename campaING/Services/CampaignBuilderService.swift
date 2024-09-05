@@ -21,12 +21,11 @@ protocol CampaignBuilderDataProviding {
     func selectedOptionsFor(_ step: CampaignBuilderStep) -> [any CampaignBuilderFilteringDataType]
 }
 
-
 extension CampaignBuilderDataProviding where Self: CampaignBuilding {
     func dataFor(_ step: CampaignBuilderStep) -> [any CampaignBuilderFilteringDataType] {
         switch step {
         case .chooseTargetingSpecifics: return availableSpecifics
-        case .chooseCampaignChannel: return selectedSpecifics.map(\.campaignChannels).flatMap { $0 }
+        case .chooseCampaignChannel: return selectedSpecifics.map(\.campaignChannels).flatMap { $0 }.uniqued()
         case .chooseCampaign:
             guard let selectedCampaignChannel else { return [] }
             return campaignsFor(selectedCampaignChannel)
@@ -55,9 +54,6 @@ class CampaignBuilderService: CampaignBuilderServiceProviding {
     private let targetingSpecificsProvider: TargetingSpecificsProviding
     private(set) var selectedSpecifics = [TargetingSpecific]()
     private(set) var availableSpecifics: [TargetingSpecific]
-    var campaignChannels: [CampaignChannel] {
-        return Set(selectedSpecifics.map(\.campaignChannels).flatMap{ $0 }).uniqued()
-    }
     
     init(targetingSpecificsProvider: TargetingSpecificsProviding) {
         self.targetingSpecificsProvider = targetingSpecificsProvider
@@ -75,7 +71,6 @@ class CampaignBuilderService: CampaignBuilderServiceProviding {
         default:
             break
         }
-
     }
     
     func campaignsFor(_ channel: CampaignChannel) -> [Campaign] {

@@ -7,24 +7,24 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Campaign Builder Table View Controller-->
+        <!--Filter Table View Controller-->
         <scene sceneID="EUJ-vN-0ls">
             <objects>
-                <tableViewController storyboardIdentifier="CampaignBuilderTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="D4T-0z-l1N" customClass="CampaignBuilderTableViewController" customModule="campaING" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="FilterTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="D4T-0z-l1N" customClass="FilterTableViewController" customModule="campaING" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="KyS-nG-lN3">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="gray" indentationWidth="10" reuseIdentifier="CampaignBuildingFilterCell" id="39b-gV-kGm" userLabel="CampaignBuildingFilterCell" customClass="CampaignBuildingFilterCell" customModule="campaING" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="50" width="393" height="59.333332061767578"/>
+                                <rect key="frame" x="0.0" y="50" width="393" height="59"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="39b-gV-kGm" id="eZz-I8-gqR">
-                                    <rect key="frame" x="0.0" y="0.0" width="393" height="59.333332061767578"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="393" height="59"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KnQ-1e-a5y">
-                                            <rect key="frame" x="175.66666666666666" y="19" width="41.666666666666657" height="21.333333333333329"/>
+                                            <rect key="frame" x="175.66666666666666" y="19" width="41.666666666666657" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -48,13 +48,7 @@
                             <outlet property="delegate" destination="D4T-0z-l1N" id="s7r-nT-1Tg"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" style="editor" id="Vcr-YM-IY6">
-                        <barButtonItem key="rightBarButtonItem" title="Done" style="done" id="wEn-2j-eMd">
-                            <connections>
-                                <action selector="didTapNext:" destination="D4T-0z-l1N" id="2zo-Vv-3LC"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" style="editor" id="Vcr-YM-IY6"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kiF-Ru-YII" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

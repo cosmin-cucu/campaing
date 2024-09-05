@@ -15,13 +15,14 @@ extension TargetingSpecificsProviding {
     func availableSpecificsFor(_ selectedSpecifics: [TargetingSpecific]) -> [TargetingSpecific] {
         guard !selectedSpecifics.isEmpty else { return targetingSpecifics }
         let selectedSpecificsCampaigns =
-            selectedSpecifics
-            .map { $0.campaignChannels }
-            .flatMap{ $0.compactMap{ $0 }}
-            .uniqued()
+                selectedSpecifics
+                .map { Set($0.campaignChannels) }
+                .reduce(Set<CampaignChannel>(selectedSpecifics.first?.campaignChannels ?? []))  { partialResult, set -> Set<CampaignChannel> in
+                    return partialResult.intersection(set)
+                }
         
         return targetingSpecifics.filter { specific in
-            Set(selectedSpecificsCampaigns).isSubset(of: specific.campaignChannels)
+            !selectedSpecificsCampaigns.isDisjoint(with: specific.campaignChannels)
         }
     }
 }

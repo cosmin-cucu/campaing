@@ -8,3 +8,10 @@
 protocol CampaignProviding {
     func campaignsFor(_ channel: CampaignChannel) -> [Campaign]
 }
+
+struct LocalJSONCampaignLoader: CampaignProviding {
+    func campaignsFor(_ channel: CampaignChannel) -> [Campaign] {
+        return []
+    }
+}
+

@@ -33,7 +33,7 @@ class CampaignBuilderCoordinator: NSObject, Coordinator {
     
     private func presentNewStep() {
         let type = currentStep.dataType
-        guard let newViewController = newViewControllerFor(type) else {
+        guard let newViewController = newFilteringViewController(type) else {
             fatalError("Could not start the coorrdinator")
         }
         
@@ -42,16 +42,16 @@ class CampaignBuilderCoordinator: NSObject, Coordinator {
 }
 
 extension CampaignBuilderCoordinator {
-    func newViewControllerFor<T: CampaignBuildingRepresentableType>(
+    func newFilteringViewController<T: CampaignFilteringUIRepresentableType>(
         _ dataType: T.Type) -> UIViewController? {
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        let campaignBuilderTableViewController = mainStoryboard.instantiateViewController(identifier: "CampaignBuilderTableViewController", creator: customizedViewController) as? CampaignBuilderTableViewController<T>
+        let campaignBuilderTableViewController = mainStoryboard.instantiateViewController(identifier: "FilterTableViewController", creator: customizedViewController) as? FilterTableViewController<T>
         
         return campaignBuilderTableViewController
     }
     
-    func customizedViewController<T: CampaignBuildingRepresentableType>(_ coder: NSCoder) -> CampaignBuilderTableViewController<T>? {
-        let viewController = CampaignBuilderTableViewController<T>(coder: coder, coordinator: self, step: currentStep, buildingService: buildingService)
+    func customizedViewController<T: CampaignFilteringUIRepresentableType>(_ coder: NSCoder) -> FilterTableViewController<T>? {
+        let viewController = FilterTableViewController<T>(coder: coder, coordinator: self, step: currentStep, buildingService: buildingService)
         return viewController
     }
 }

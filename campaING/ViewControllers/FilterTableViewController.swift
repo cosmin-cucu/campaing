@@ -7,15 +7,19 @@
 
 import UIKit
 
-final class CampaignBuilderTableViewController<T: CampaignBuildingRepresentableType>: UITableViewController {
+protocol CampaignFilteringUIRepresentableType: CampaignBuildingFilterCellCustomizing & CampaignBuilderFilteringDataType {}
+
+final class FilterTableViewController<T: CampaignFilteringUIRepresentableType>: UITableViewController {
     let service: CampaignBuilderServiceProviding
     let viewModel: CampaignBuilderTableViewModel<T>
     let coordinator: CampaignBuilderCoordinator?
+    let configuration: CampaignFilterViewControllerConfigurating
     
     required override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         self.service = CampaignBuilderService(targetingSpecificsProvider: LocalJSONTargetingSpecificsLoader())
         self.viewModel = .init(dataProvider: service, step: .chooseTargetingSpecifics)
         self.coordinator = nil
+        self.configuration = CampaignBuilderStep.chooseTargetingSpecifics.filterViewControllerConfiguration
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
@@ -23,6 +27,7 @@ final class CampaignBuilderTableViewController<T: CampaignBuildingRepresentableT
         self.service = buildingService
         self.viewModel = .init(dataProvider: service, step: step)
         self.coordinator = coordinator
+        self.configuration = step.filterViewControllerConfiguration
         super.init(coder: coder)
     }
     
@@ -30,6 +35,7 @@ final class CampaignBuilderTableViewController<T: CampaignBuildingRepresentableT
         self.service = CampaignBuilderService(targetingSpecificsProvider: LocalJSONTargetingSpecificsLoader())
         self.viewModel = .init(dataProvider: service, step: .chooseTargetingSpecifics)
         self.coordinator = nil
+        self.configuration = CampaignBuilderStep.chooseTargetingSpecifics.filterViewControllerConfiguration
         super.init(coder: coder)
     }
     
@@ -50,22 +56,28 @@ final class CampaignBuilderTableViewController<T: CampaignBuildingRepresentableT
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         service.didSelectOption(service.dataFor(viewModel.step)[indexPath.row])
         tableView.reloadSections([0], with: .automatic)
+        navigationItem.rightBarButtonItem?.isHidden = service.selectedOptionsFor(viewModel.step).isEmpty
     }
 }
 
 // MARK: Setup
-extension CampaignBuilderTableViewController {
+extension FilterTableViewController {
     func setup() {
         tableView.dataSource = viewModel
         setupNavigationItem()
     }
     
     func setupNavigationItem() {
-        navigationItem.title = viewModel.step.title
-        navigationItem.rightBarButtonItem?.title = viewModel.step.rightBarButtonTitle
+        navigationItem.title = configuration.title
+        if configuration.shouldShowRightBarbutton {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: configuration.rightBarButtonTitle, style: .plain, target: self, action: #selector(didTapNext))
+        }
+        if configuration.shouldShowLeftBarbutton {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(didTapPrevious))
+        }
         
         if viewModel.step.previous != nil {
-            navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(didTapPrevious))
+            
         }
     }
 }

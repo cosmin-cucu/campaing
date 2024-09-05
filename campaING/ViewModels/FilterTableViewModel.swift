@@ -7,9 +7,7 @@
 
 import UIKit
 
-protocol CampaignBuildingRepresentableType: CampaignBuildingFilterCellCustomizing & CampaignBuilderFilteringDataType {}
-
-class CampaignBuilderTableViewModel<T: CampaignBuildingRepresentableType>: NSObject, UITableViewDataSource {
+class CampaignBuilderTableViewModel<T: CampaignFilteringUIRepresentableType>: NSObject, UITableViewDataSource {
     let step: CampaignBuilderStep
     let dataProvider: CampaignBuilderDataProviding
     

@@ -7,30 +7,27 @@
 
 import UIKit
 
-class CampaignBuilderTableViewModel: NSObject {
+protocol CampaignBuildingRepresentableType: CampaignBuildingFilterCellCustomizing & CampaignBuilderFilteringDataType {}
+
+class CampaignBuilderTableViewModel<T: CampaignBuildingRepresentableType>: NSObject, UITableViewDataSource {
     let step: CampaignBuilderStep
-    let service: CampaignBuilding
+    let dataProvider: CampaignBuilderDataProviding
     
-    init(builderService: CampaignBuilding, step: CampaignBuilderStep = .chooseTargetingSpecifics) {
-        self.service = builderService
+    init(dataProvider: CampaignBuilderDataProviding, step: CampaignBuilderStep = .chooseTargetingSpecifics) {
+        self.dataProvider = dataProvider
         self.step = step
     }
     
-    var numberOfFilters: Int {
-        return service.specifics.count
-    }
-    
     func customizeCell(_ cell: CampaignBuildingFilterCell, for row: Int) {
-        let element = service.specifics[row]
-        let isCellSelected = service.selectedSpecifics.contains(where: { $0.name == service.specifics[row].name })
+        guard let element = dataProvider.dataFor(step)[row] as? (T),
+        let selectedElements = dataProvider.selectedOptionsFor(step) as? [T] else { return }
+        let isCellSelected = selectedElements.contains(element)
         element.customize(cell, isSelected: isCellSelected)
     }
-}
-
-// MARK: UITableViewDataSource
-extension CampaignBuilderTableViewModel: UITableViewDataSource {
+ 
+    // MARK: UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return numberOfFilters
+        return dataProvider.dataFor(step).count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

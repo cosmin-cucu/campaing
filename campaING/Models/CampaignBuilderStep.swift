@@ -5,6 +5,8 @@
 //  Created by Cosmin Cucu on 4/9/24.
 //
 
+protocol CampaignBuilderFilteringDataType: Equatable, Hashable, Codable { }
+
 enum CampaignBuilderStep {
     case chooseTargetingSpecifics
     case chooseCampaignChannel
@@ -46,5 +48,12 @@ enum CampaignBuilderStep {
         }
     }
     
-    
+    var dataType: any CampaignBuildingRepresentableType.Type {
+        switch self {
+        case .chooseTargetingSpecifics: return TargetingSpecific.self
+        case .chooseCampaignChannel: return CampaignChannel.self
+        case .chooseCampaign: return Campaign.self
+        case .summary: fatalError("No data type for \(self)")
+        }
+    }
 }

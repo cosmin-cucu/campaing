@@ -8,7 +8,7 @@ import UIKit
 
 class CampaignBuilderCoordinator: NSObject, Coordinator {
     private var currentStep: CampaignBuilderStep = .chooseTargetingSpecifics
-    let buildingService: CampaignBuilding = CampaignBuilderService(targetingSpecificsProvider: LocalJSONTargetingSpecificsLoader())
+    let buildingService: CampaignBuilderServiceProviding = CampaignBuilderService(targetingSpecificsProvider: LocalJSONTargetingSpecificsLoader())
     var navigationController: UINavigationController
     
     init(navigationController: UINavigationController) {
@@ -16,13 +16,14 @@ class CampaignBuilderCoordinator: NSObject, Coordinator {
     }
     
     func start() {
-        navigationController.pushViewController(newViewControllerFor(currentStep), animated: true)
+        let newViewController = newViewControllerFor(currentStep, dataType: TargetingSpecific.self)
+        navigationController.pushViewController(newViewController, animated: true)
     }
     
     @objc func pushFlowToNextStep() {
         guard let nextStep = currentStep.next else { return }
         currentStep = nextStep
-        navigationController.pushViewController(newViewControllerFor(nextStep), animated: true)
+        navigationController.pushViewController(newViewControllerFor(nextStep, dataType: CampaignChannel.self), animated: true)
     }
     
     @objc func popFlowToPreviousStep() {
@@ -33,13 +34,14 @@ class CampaignBuilderCoordinator: NSObject, Coordinator {
 }
 
 extension CampaignBuilderCoordinator {
-    func newViewControllerFor(_ step: CampaignBuilderStep) -> CampaignBuilderTableViewController {
+    func newViewControllerFor<T: CampaignBuildingRepresentableType>(
+        _ step: CampaignBuilderStep, dataType: T.Type) -> CampaignBuilderTableViewController<T> {
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
         guard let campaignBuilderTableViewController = mainStoryboard.instantiateViewController(identifier: "CampaignBuilderTableViewController", creator: { [weak self] coder in
             guard let self = self else { fatalError("Could not instantiate CampaignBuilderTableViewController") }
-            let viewController = CampaignBuilderTableViewController(coder: coder, coordinator: self, step: step, buildingService: buildingService)
+            let viewController = CampaignBuilderTableViewController<T>(coder: coder, coordinator: self, step: step, buildingService: buildingService)
             return viewController
-        }) as? CampaignBuilderTableViewController else {
+        }) as? CampaignBuilderTableViewController<T> else {
             fatalError("Could not instantiate CampaignBuilderTableViewController")
         }
         

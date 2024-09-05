@@ -6,18 +6,18 @@
 //
 import UIKit
 
-protocol Coordinator {
-    var navigationController: UINavigationController { get }
-    func start()
-    func attachChild(_ coordinator: Coordinator)
-}
-
-class MainCoordinator: Coordinator {
+class MainAppCoordinator: Coordinator {
     private var childCoordinators: [Coordinator]
-    let navigationController = UINavigationController()
+    let navigationController: UINavigationController
     
     init() {
+        navigationController = UINavigationController()
         childCoordinators = [CampaignBuilderCoordinator(navigationController: navigationController)]
+    }
+    
+    init(navigationController: UINavigationController) {
+        self.navigationController = navigationController
+        childCoordinators = []
     }
     
     func start() {

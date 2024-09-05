@@ -6,20 +6,28 @@
 //
 import UIKit
 
-class CampaignBuilderCoordinator: NSObject, Coordinator {
+class CampaignBuilderCoordinator: ChildCoordinator, ChildCoordinatorDelegate {
+    weak var delegate: ChildCoordinatorDelegate?
+    var navigationController: UINavigationController
     private var currentStep: CampaignBuilderStep = .chooseTargetingSpecifics
     private var childCoordinators: [Coordinator] = []
     let buildingService: CampaignBuilderService
-    var navigationController: UINavigationController
     
-    init(navigationController: UINavigationController) {
-        self.navigationController = navigationController
+    init(navigationController: UINavigationController, delegate: ChildCoordinatorDelegate? = nil) {
         self.buildingService = CampaignBuilderService(targetingSpecificsProvider: LocalJSONTargetingSpecificsLoader(),
                                                       campaignProvider: LocalJSONCampaignLoader())
+        self.navigationController = navigationController
+        self.delegate = delegate
     }
+    
     
     func start() {
         presentNewStep()
+    }
+    
+    func attachChild(_ coordinator: any Coordinator) {
+        childCoordinators.append(coordinator)
+        coordinator.start()
     }
     
     @objc func pushFlowToNextStep() {
@@ -31,20 +39,41 @@ class CampaignBuilderCoordinator: NSObject, Coordinator {
     @objc func popFlowToPreviousStep() {
         guard let previousStep = currentStep.previous else { return }
         currentStep = previousStep
-        navigationController.popViewController(animated: true)
-    }
-    
-    func attachChild(_ coordinator: any Coordinator) {
-        
+        if currentStep.next?.isFilteringStep == true {
+            navigationController.popViewController(animated: true)
+        }
     }
     
     private func presentNewStep() {
-        guard let type = currentStep.dataType else { return }
+        if currentStep.isFilteringStep {
+            presentNewFilteringViewController()
+        } else {
+            attachChildCoordinator(for: currentStep)
+        }
+    }
+    
+    private func attachChildCoordinator(for step: CampaignBuilderStep) {
+        let child = ChooseCampaignCoordinator(navigationController: navigationController, delegate: self, channel: buildingService.selectedCampaignChannel!)
+        attachChild(child)
+    }
+    
+    func presentNewFilteringViewController() {
+        let type = currentStep.dataType
         guard let newViewController = newFilteringViewController(type) else {
             fatalError("Could not start the coorrdinator")
         }
         
         navigationController.pushViewController(newViewController, animated: true)
+    }
+    
+    func coordinatorFinished(_ coordinator: any Coordinator) {
+        if coordinator is ChooseCampaignCoordinator,
+           buildingService.selectedCampaign != nil{
+            pushFlowToNextStep()
+        } else {
+            childCoordinators.removeLast()
+            popFlowToPreviousStep()
+        }
     }
 }
 
@@ -62,3 +91,5 @@ extension CampaignBuilderCoordinator {
         return viewController
     }
 }
+
+

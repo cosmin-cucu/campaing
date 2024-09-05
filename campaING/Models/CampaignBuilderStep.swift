@@ -32,11 +32,20 @@ enum CampaignBuilderStep {
         }
     }
     
-    var dataType: (any BuilderTableViewRepresentableType.Type)? {
+    var isFilteringStep: Bool {
+        switch self {
+            case .chooseTargetingSpecifics, .chooseCampaignChannel: return true
+            case .chooseCampaign, .summary: return false
+        }
+    }
+    
+    var dataType: any BuilderTableViewRepresentableType.Type {
+        guard isFilteringStep else { fatalError("Should be calling dataType on filtering builder steps")}
         switch self {
         case .chooseTargetingSpecifics: return TargetingSpecific.self
         case .chooseCampaignChannel: return CampaignChannel.self
-        case .chooseCampaign, .summary: return nil
+        case .chooseCampaign, .summary:
+            fatalError()
         }
     }
     

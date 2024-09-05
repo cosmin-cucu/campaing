@@ -62,9 +62,16 @@ final class BuilderTableViewController<T: BuilderTableViewRepresentableType>: UI
     
     // MARK: UITableViewDelegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        service.didSelectOption(service.dataFor(viewModel.step)[indexPath.row])
+        submitSelectionAt(indexPath)
         tableView.reloadSections([0], with: .automatic)
         navigationItem.rightBarButtonItem?.isHidden = service.selectedOptionsFor(viewModel.step).isEmpty
+    }
+    
+    func submitSelectionAt(_ indexPath: IndexPath) {
+        service.didSelectOption(service.dataFor(viewModel.step)[indexPath.row])
+        if viewModel.step.next?.isFilteringStep == false {
+            coordinator?.pushFlowToNextStep()
+        }
     }
 }
 

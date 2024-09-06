@@ -39,7 +39,6 @@ class ChooseCampaignCollectionViewCell: UICollectionViewCell {
     }
 }
 
-
 extension Campaign: ChooseCampaignCellCustomizing {
     func customize(_ cell: ChooseCampaignCollectionViewCell) {
         cell.priceLabel.text = "\(price) EUR"

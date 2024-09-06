@@ -20,7 +20,9 @@ class ChooseCampaignCoordinator: ChildCoordinator {
     }
     
     func start() {
-        let chooseCampaignViewController = ChooseCampaignViewController.instantiate(channel, campaignProvider: LocalJSONCampaignLoader())
+        let campaignsProvider = LocalJSONCampaignLoader()
+        let campaigns = campaignsProvider.campaignsFor(channel.identifier)
+        let chooseCampaignViewController = ChooseCampaignViewController.instantiate(campaigns: campaigns)
         chooseCampaignViewController.delegate = self
         let newNavigationController = UINavigationController(rootViewController: chooseCampaignViewController)
         navigationController.present(newNavigationController, animated: true)

@@ -9,14 +9,12 @@ import MessageUI
 
 class SubmitCampaignCoordinator: NSObject, ChildCoordinator {
     weak var delegate: ChildCoordinatorDelegate?
-    let service: CampaignSubmittingService
     var navigationController: UINavigationController
     let campaigns: [CampaignChannel: Campaign]
     
-    init(delegate: ChildCoordinatorDelegate? = nil, service: CampaignSubmittingService, campaigns: [CampaignChannel: Campaign], navigationController: UINavigationController) {
+    init(delegate: ChildCoordinatorDelegate? = nil, campaigns: [CampaignChannel: Campaign], navigationController: UINavigationController) {
         self.campaigns = campaigns
         self.delegate = delegate
-        self.service = service
         self.navigationController = navigationController
     }
     
@@ -24,16 +22,28 @@ class SubmitCampaignCoordinator: NSObject, ChildCoordinator {
         if MFMailComposeViewController.canSendMail() {
             presentEmail()
         } else {
-            delegate?.coordinatorFinished(self)
+            presentErrorAlert { [weak self] in
+                guard let self else { return }
+                self.delegate?.coordinatorFinished(self)
+            }
         }
     }
     
-    func presentEmail() {
+    private func presentEmail() {
         let emailViewController = newEmailViewController()
         navigationController.present(emailViewController, animated: true)
     }
     
-    func newEmailViewController() -> MFMailComposeViewController {
+    private func presentErrorAlert(_ completion: @escaping() -> Void) {
+        let alertController = UIAlertController(title: "Could not open the mail app!", message: "Have you previously set it up?", preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .cancel, handler: { _ in
+            completion()
+        })
+        alertController.addAction(action)
+        navigationController.present(alertController, animated: true)
+    }
+    
+    private func newEmailViewController() -> MFMailComposeViewController {
         let emailViewController = MFMailComposeViewController()
         emailViewController.mailComposeDelegate = self
         emailViewController.setToRecipients(["bogus@bogus.com"])

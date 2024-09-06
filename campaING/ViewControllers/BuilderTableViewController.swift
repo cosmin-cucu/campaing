@@ -9,28 +9,36 @@ import UIKit
 
 protocol BuilderTableViewRepresentableType: CampaignBuilderCellCustomizing & CampaignBuilderFilteringDataType {}
 
+protocol BuilderTableViewDelegate: AnyObject {
+    func submittedSelection()
+    func wasDismissed()
+}
+
 final class BuilderTableViewController<T: BuilderTableViewRepresentableType>: UITableViewController {
-    let service: CampaignBuilderServiceProviding
-    let viewModel: CampaignBuilderTableViewModel<T>
-    let coordinator: CampaignBuilderCoordinator?
-    let configuration: BuilderTableViewControllerConfigurating
+    private let service: CampaignBuilderServiceProviding
+    private let viewModel: CampaignBuilderTableViewModel<T>
+    private let configuration: BuilderTableViewControllerConfigurating
+    private let step: CampaignBuilderStep
+    weak var delegate: BuilderTableViewDelegate?
     
     required override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         self.service = CampaignBuilderService(targetingSpecificsProvider: LocalJSONTargetingSpecificsLoader(),
                                               campaignProvider: LocalJSONCampaignLoader())
-        self.viewModel = .init(dataProvider: service, step: .chooseTargetingSpecifics)
-        self.coordinator = nil
+        self.step = .chooseTargetingSpecifics
+        self.viewModel = .init(dataProvider: service, step: step)
+        self.delegate = nil
         self.configuration = BuilderTableViewConfiguration(.chooseTargetingSpecifics)
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
-    init?(coder: NSCoder, coordinator: CampaignBuilderCoordinator, step: CampaignBuilderStep = .chooseTargetingSpecifics, buildingService: CampaignBuilderServiceProviding) {
+    init?(coder: NSCoder, delegate: BuilderTableViewDelegate? = nil, step: CampaignBuilderStep = .chooseTargetingSpecifics, service: CampaignBuilderServiceProviding) {
         guard let configuration = step.viewControllerConfiguration as? BuilderTableViewControllerConfigurating else {
             fatalError("Could not instantiate the configuration!")
         }
-        self.service = buildingService
+        self.step = step
+        self.service = service
         self.viewModel = .init(dataProvider: service, step: step)
-        self.coordinator = coordinator
+        self.delegate = delegate
         self.configuration = configuration
         super.init(coder: coder)
     }
@@ -39,10 +47,11 @@ final class BuilderTableViewController<T: BuilderTableViewRepresentableType>: UI
         guard let configuration = CampaignBuilderStep.chooseTargetingSpecifics.viewControllerConfiguration as? BuilderTableViewControllerConfigurating else {
             fatalError("Could not instantiate the configuration!")
         }
+        self.step = .chooseTargetingSpecifics
         self.service = CampaignBuilderService(targetingSpecificsProvider: LocalJSONTargetingSpecificsLoader(),
                                               campaignProvider: LocalJSONCampaignLoader())
-        self.viewModel = .init(dataProvider: service, step: .chooseTargetingSpecifics)
-        self.coordinator = nil
+        self.viewModel = .init(dataProvider: service, step: step)
+        self.delegate = nil
         self.configuration = configuration
         super.init(coder: coder)
     }
@@ -52,37 +61,37 @@ final class BuilderTableViewController<T: BuilderTableViewRepresentableType>: UI
         setup()
     }
     
-    @objc func didTapNext(_ sender: Any) {
-        coordinator?.pushFlowToNextStep()
+    @objc private  func didTapNext(_ sender: Any) {
+        delegate?.submittedSelection()
     }
     
-    @objc func didTapPrevious() {
-        coordinator?.popFlowToPreviousStep()
+    @objc private  func didTapPrevious() {
+        delegate?.wasDismissed()
     }
     
     // MARK: UITableViewDelegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         submitSelectionAt(indexPath)
         tableView.reloadSections([0], with: .automatic)
-        navigationItem.rightBarButtonItem?.isHidden = service.selectedOptionsFor(viewModel.step).isEmpty
+        navigationItem.rightBarButtonItem?.isHidden = !viewModel.isDataSelected
     }
     
-    func submitSelectionAt(_ indexPath: IndexPath) {
-        service.didSelectOption(service.dataFor(viewModel.step)[indexPath.row])
-        if viewModel.step.next?.isFilteringStep == false {
-            coordinator?.pushFlowToNextStep()
+    private func submitSelectionAt(_ indexPath: IndexPath) {
+        service.didSelectOption(service.dataFor(step)[indexPath.row])
+        if step.next?.isFilteringStep == false {
+            delegate?.submittedSelection()
         }
     }
 }
 
 // MARK: Setup
 extension BuilderTableViewController {
-    func setup() {
+    private func setup() {
         tableView.dataSource = viewModel
         setupNavigationItem()
     }
     
-    func setupNavigationItem() {
+    private func setupNavigationItem() {
         navigationItem.title = configuration.title
         if configuration.shouldShowRightBarbutton {
             navigationItem.rightBarButtonItem = UIBarButtonItem(title: configuration.rightBarButtonTitle, style: .plain, target: self, action: #selector(didTapNext))
@@ -94,4 +103,5 @@ extension BuilderTableViewController {
         }
     }
 }
+
 

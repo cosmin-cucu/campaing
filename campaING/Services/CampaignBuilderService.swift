@@ -15,7 +15,7 @@ protocol CampaignBuilding {
     func didSelectOption(_ option: any CampaignBuildingDataType)
 }
 
-protocol CampaignBuilderServiceProviding: CampaignBuilding, CampaignBuilderDataProviding {}
+protocol CampaignBuilderServiceProviding: CampaignBuilding, CampaignBuilderDataProviding { }
 
 class CampaignBuilderService: CampaignBuilderServiceProviding {
     var selectedCampaignChannel: CampaignChannel?

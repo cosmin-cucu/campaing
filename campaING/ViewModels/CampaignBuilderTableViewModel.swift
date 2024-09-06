@@ -8,8 +8,11 @@
 import UIKit
 
 class CampaignBuilderTableViewModel<T: BuilderTableViewRepresentableType>: NSObject, UITableViewDataSource {
-    let step: CampaignBuilderStep
+    private let step: CampaignBuilderStep
     let dataProvider: CampaignBuilderDataProviding
+    var isDataSelected: Bool {
+        !dataProvider.selectedOptionsFor(step).isEmpty
+    }
     
     init(dataProvider: CampaignBuilderDataProviding, step: CampaignBuilderStep = .chooseTargetingSpecifics) {
         self.dataProvider = dataProvider
@@ -36,3 +39,4 @@ class CampaignBuilderTableViewModel<T: BuilderTableViewRepresentableType>: NSObj
         return targetingSpecificCell
     }
 }
+

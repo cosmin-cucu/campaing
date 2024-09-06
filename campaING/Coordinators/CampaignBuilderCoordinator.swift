@@ -6,12 +6,12 @@
 //
 import UIKit
 
-class CampaignBuilderCoordinator: ChildCoordinator, ChildCoordinatorDelegate {
+class CampaignBuilderCoordinator: ChildCoordinator {
     weak var delegate: ChildCoordinatorDelegate?
     var navigationController: UINavigationController
     private var currentStep: CampaignBuilderStep = .chooseTargetingSpecifics
     private var childCoordinators: [Coordinator] = []
-    let buildingService: CampaignBuilderService
+    private let buildingService: CampaignBuilderService
     
     init(navigationController: UINavigationController, delegate: ChildCoordinatorDelegate? = nil) {
         self.buildingService = CampaignBuilderService(targetingSpecificsProvider: LocalJSONTargetingSpecificsLoader(),
@@ -19,7 +19,6 @@ class CampaignBuilderCoordinator: ChildCoordinator, ChildCoordinatorDelegate {
         self.navigationController = navigationController
         self.delegate = delegate
     }
-    
     
     func start() {
         presentNewStep()
@@ -69,7 +68,7 @@ class CampaignBuilderCoordinator: ChildCoordinator, ChildCoordinatorDelegate {
         attachChild(child)
     }
     
-    func presentNewFilteringViewController() {
+    private func presentNewFilteringViewController() {
         let type = currentStep.dataType
         guard let newViewController = newFilteringViewController(type) else {
             fatalError("Could not start the coorrdinator")
@@ -78,6 +77,27 @@ class CampaignBuilderCoordinator: ChildCoordinator, ChildCoordinatorDelegate {
         navigationController.pushViewController(newViewController, animated: true)
     }
     
+    private func updateRightBarButton() {
+        navigationController.topViewController?.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(pushFlowToNextStep))
+    }
+}
+
+extension CampaignBuilderCoordinator {
+    private func newFilteringViewController<T: BuilderTableViewRepresentableType>(
+        _ dataType: T.Type) -> UIViewController? {
+            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            let campaignBuilderTableViewController = mainStoryboard.instantiateViewController(identifier: "BuilderTableViewController", creator: customizedViewController) as? BuilderTableViewController<T>
+            
+            return campaignBuilderTableViewController
+        }
+    
+    private func customizedViewController<T: BuilderTableViewRepresentableType>(_ coder: NSCoder) -> BuilderTableViewController<T>? {
+        let viewController = BuilderTableViewController<T>(coder: coder, delegate: self, step: currentStep, service: buildingService)
+        return viewController
+    }
+}
+
+extension CampaignBuilderCoordinator: ChildCoordinatorDelegate {
     func coordinatorFinished(_ coordinator: any Coordinator) {
         defer {
             childCoordinators.removeLast()
@@ -87,28 +107,17 @@ class CampaignBuilderCoordinator: ChildCoordinator, ChildCoordinatorDelegate {
            !buildingService.selectedCampaigns.isEmpty {
             updateRightBarButton()
         } else {
-            childCoordinators.removeLast()
             popFlowToPreviousStep()
         }
     }
-    
-    private func updateRightBarButton() {
-        navigationController.topViewController?.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(pushFlowToNextStep))
-    }
 }
 
-extension CampaignBuilderCoordinator {
-    func newFilteringViewController<T: BuilderTableViewRepresentableType>(
-        _ dataType: T.Type) -> UIViewController? {
-        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        let campaignBuilderTableViewController = mainStoryboard.instantiateViewController(identifier: "BuilderTableViewController", creator: customizedViewController) as? BuilderTableViewController<T>
-        
-        return campaignBuilderTableViewController
+extension CampaignBuilderCoordinator: BuilderTableViewDelegate {
+    func wasDismissed() {
+        popFlowToPreviousStep()
     }
-    
-    func customizedViewController<T: BuilderTableViewRepresentableType>(_ coder: NSCoder) -> BuilderTableViewController<T>? {
-        let viewController = BuilderTableViewController<T>(coder: coder, coordinator: self, step: currentStep, buildingService: buildingService)
-        return viewController
+    func submittedSelection() {
+        pushFlowToNextStep()
     }
 }
 
@@ -117,9 +126,8 @@ extension CampaignBuilderCoordinator: ChosenCampaignsSummaryViewControllerDelega
         guard currentStep == .summary else { return }
         currentStep = .chooseCampaignChannel
     }
-    
     func submitCampaigns() {
-        let submitCampaignCoordinator = SubmitCampaignCoordinator(delegate: self, service: CampaignSubmitter(), campaigns: buildingService.selectedCampaigns, navigationController: navigationController)
+        let submitCampaignCoordinator = SubmitCampaignCoordinator(delegate: self, campaigns: buildingService.selectedCampaigns, navigationController: navigationController)
         attachChild(submitCampaignCoordinator)
     }
 }

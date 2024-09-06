@@ -29,8 +29,8 @@ struct BuilderTableViewConfiguration: BuilderTableViewControllerConfigurating {
     }
 }
 
-fileprivate extension CampaignBuilderStep {
-    var title: String {
+extension CampaignBuilderStep {
+    fileprivate var title: String {
         switch self {
         case .chooseTargetingSpecifics: return "Targeting Specifics"
         case .chooseCampaignChannel: return "Channels"
@@ -39,7 +39,7 @@ fileprivate extension CampaignBuilderStep {
         }
     }
     
-    var rightBarButtonTitle: String {
+    fileprivate var rightBarButtonTitle: String {
         if next != nil {
             return "Next"
         } else {

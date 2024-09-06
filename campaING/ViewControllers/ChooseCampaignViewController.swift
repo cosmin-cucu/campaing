@@ -12,18 +12,18 @@ protocol ChooseCampaignViewControllerDelegate: AnyObject {
 
 class ChooseCampaignViewController: UICollectionViewController {
     weak var delegate: ChooseCampaignViewControllerDelegate?
-    var campaigns: [Campaign]
-    var chosenCampaign: Campaign?
+    private var campaigns: [Campaign]
+    private var chosenCampaign: Campaign?
     
-    static func instantiate(_ channel: CampaignChannel, campaignProvider: CampaignProviding) -> ChooseCampaignViewController {
+    static func instantiate(campaigns: [Campaign]) -> ChooseCampaignViewController {
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
         return mainStoryboard.instantiateViewController(identifier: "ChooseCampaignViewController", creator: { coder in
-            ChooseCampaignViewController(coder: coder, channel: channel, campaignProvider: campaignProvider)
+            ChooseCampaignViewController(coder: coder, campaigns: campaigns)
         })
     }
     
-    init?(coder: NSCoder, channel: CampaignChannel, campaignProvider: CampaignProviding) {
-        self.campaigns = campaignProvider.campaignsFor(channel.identifier).sorted { $0.price < $1.price }
+    init?(coder: NSCoder, campaigns: [Campaign]) {
+        self.campaigns = campaigns
         super.init(coder: coder)
     }
     
@@ -64,7 +64,7 @@ class ChooseCampaignViewController: UICollectionViewController {
         updateRightBarButton()
     }
     
-    func updateRightBarButton() {
+    private func updateRightBarButton() {
         guard chosenCampaign != nil else {
             navigationItem.setRightBarButton(nil, animated: true)
             return
@@ -74,13 +74,13 @@ class ChooseCampaignViewController: UICollectionViewController {
         navigationItem.setRightBarButton(barbutton, animated: true)
     }
     
-    @objc func submitSelection() {
+    @objc private  func submitSelection() {
         guard let chosenCampaign else  { return }
         navigationController?.dismiss(animated: true)
         delegate?.finishedSelection(chosenCampaign)
     }
     
-    func newLayout() -> UICollectionViewCompositionalLayout {
+    private func newLayout() -> UICollectionViewCompositionalLayout {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
             heightDimension: .fractionalHeight(1))

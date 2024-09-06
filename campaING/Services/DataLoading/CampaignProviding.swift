@@ -10,9 +10,9 @@ protocol CampaignProviding {
     func campaignsFor(_ channelIdentifier: String) -> [Campaign]
 }
 
-struct LocalJSONCampaignLoader: CampaignProviding {
+class LocalJSONCampaignLoader: CampaignProviding {
     private let json = "Campaigns.json"
-    private var channels: [CampaignChannel] {
+    private lazy var channels: [CampaignChannel] = {
         do {
             let data = try JSONReader.read(json)
             let decoder = JSONDecoder()
@@ -21,11 +21,10 @@ struct LocalJSONCampaignLoader: CampaignProviding {
             print("Error decoding JSON: \(error)")
             return []
         }
-    }
-    
+    }()
     
     func campaignsFor(_ channelIdentifier: String) -> [Campaign] {
-        return channels
+        channels
             .first(where: { $0.identifier == channelIdentifier})
             .flatMap(\.campaigns) ?? []
     }

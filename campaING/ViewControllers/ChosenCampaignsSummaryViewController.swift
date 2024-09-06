@@ -7,59 +7,15 @@
 import UIKit
 import WebKit
 
-protocol StackViewRepresentable {
-    func newStackViewSubviews() -> [UIView]
-}
-
-extension CampaignChannel: StackViewRepresentable {
-    func newStackViewSubviews() -> [UIView] {
-        let channelNameLabel = UILabel()
-        channelNameLabel.text = name
-        channelNameLabel.font = .preferredFont(forTextStyle: .title1)
-        return [channelNameLabel]
-    }
-}
-
-extension Campaign: StackViewRepresentable {
-    func newStackViewSubviews() -> [UIView] {
-        let detailsStackView = UIStackView()
-        detailsStackView.axis = .vertical
-        
-        let priceLabel = UILabel()
-        priceLabel.text = "\(price) EUR"
-        priceLabel.font = .preferredFont(forTextStyle: .title1)
-        detailsStackView.addArrangedSubview(priceLabel)
-        
-        if let listings = listings {
-            let listingsLabel = UILabel()
-            listingsLabel.text = listings + " listings"
-            listingsLabel.font = .preferredFont(forTextStyle: .headline)
-            detailsStackView.addArrangedSubview(listingsLabel)
-        }
-        
-        if let optimizations = optimizations {
-            let optimizationsLabel = UILabel()
-            optimizationsLabel.text = "\(optimizations) optimizations"
-            optimizationsLabel.font = .preferredFont(forTextStyle: .subheadline)
-            detailsStackView.addArrangedSubview(optimizationsLabel)
-        }
-        
-        let featuresStack = UIStackView()
-        features.forEach {
-            let featureLabel = UILabel()
-            featureLabel.text = $0
-            featuresStack.addArrangedSubview(featureLabel)
-        }
-        
-        return [detailsStackView, featuresStack]
-    }
+protocol ChosenCampaignsSummaryViewControllerDelegate: AnyObject {
+    func summaryViewControllerWasDismissed()
+    func submitCampaigns()
 }
 
 class ChosenCampaignsSummaryViewController: UIViewController {
     weak var delegate: ChosenCampaignsSummaryViewControllerDelegate?
-    let campaigns: [CampaignChannel: Campaign]
+    private let campaigns: [CampaignChannel: Campaign]
     @IBOutlet weak var summaryWebview: WKWebView!
-    
     
     required init?(coder: NSCoder) {
         self.campaigns = [:]
@@ -77,7 +33,6 @@ class ChosenCampaignsSummaryViewController: UIViewController {
         summaryWebview.loadHTMLString(campaigns.toHTML(), baseURL: nil)
     }
     
-    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         delegate?.summaryViewControllerWasDismissed()
@@ -94,9 +49,4 @@ class ChosenCampaignsSummaryViewController: UIViewController {
             return viewController
         })
     }
-}
-
-protocol ChosenCampaignsSummaryViewControllerDelegate: AnyObject {
-    func summaryViewControllerWasDismissed()
-    func submitCampaigns()
 }

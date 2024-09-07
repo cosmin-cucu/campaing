@@ -12,4 +12,11 @@ struct Campaign: CampaignBuildingDataType {
     let listings: String?
     let optimizations: Int?
     let features: [String]
+    
+    init(price: Int, listings: String?, optimizations: Int?, features: [String]) {
+        self.price = price
+        self.listings = listings
+        self.optimizations = optimizations
+        self.features = features
+    }
 }

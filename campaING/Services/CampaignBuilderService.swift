@@ -46,12 +46,7 @@ class CampaignBuilderService: CampaignBuilderServiceProviding {
     
     private func updateSelectedCampaingsWith(_ campaign: Campaign) {
         guard let selectedCampaignChannel else { return }
-        if let campaign = selectedCampaigns[selectedCampaignChannel],
-           campaign == campaign {
-            selectedCampaigns[selectedCampaignChannel] = nil
-        } else {
-            selectedCampaigns[selectedCampaignChannel] = campaign
-        }
+        selectedCampaigns[selectedCampaignChannel] = campaign
     }
     
     private func updateSpecificsWith(_ selectedSpecific: TargetingSpecific) {

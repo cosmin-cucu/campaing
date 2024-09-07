@@ -7,24 +7,28 @@
 
 import UIKit
 
+enum CampaignBuilderDataReadingError: Error {
+    case stepShouldReadNoData
+}
+
 protocol CampaignBuilderDataProviding {
-    func dataFor(_ step: CampaignBuilderStep) -> [any CampaignBuilderFilteringDataType]
-    func selectedOptionsFor(_ step: CampaignBuilderStep) -> [any CampaignBuilderFilteringDataType]
+    func dataFor(_ step: CampaignBuilderStep) throws -> [any CampaignBuilderFilteringDataType]
+    func selectedOptionsFor(_ step: CampaignBuilderStep) throws -> [any CampaignBuilderFilteringDataType]
 }
 
 extension CampaignBuilderDataProviding where Self: CampaignBuilding {
-    func dataFor(_ step: CampaignBuilderStep) -> [any CampaignBuilderFilteringDataType] {
+    func dataFor(_ step: CampaignBuilderStep) throws -> [any CampaignBuilderFilteringDataType] {
         switch step {
         case .chooseTargetingSpecifics: return availableSpecifics
         case .chooseCampaignChannel:
             return selectedSpecifics.map(\.campaignChannels).flatMap { $0 }.uniqued().compactMap(CampaignChannel.init)
         case .chooseCampaign:
-            fatalError("Summary has no data to provide. The campaign is built")
-        case .summary: fatalError("Summary has no data to provide. The campaign is built")
+            throw CampaignBuilderDataReadingError.stepShouldReadNoData
+        case .summary: throw CampaignBuilderDataReadingError.stepShouldReadNoData
         }
     }
     
-    func selectedOptionsFor(_ step: CampaignBuilderStep) -> [any CampaignBuilderFilteringDataType] {
+    func selectedOptionsFor(_ step: CampaignBuilderStep) throws -> [any CampaignBuilderFilteringDataType] {
         switch step {
         case .chooseTargetingSpecifics: return selectedSpecifics
         case .chooseCampaignChannel:
@@ -32,7 +36,7 @@ extension CampaignBuilderDataProviding where Self: CampaignBuilding {
                 return []
             }
             return [selectedCampaignChannel]
-        case .chooseCampaign, .summary: fatalError("Summary has no data to provide. The campaign is built")
+        case .chooseCampaign, .summary: throw CampaignBuilderDataReadingError.stepShouldReadNoData
         }
     }
 }

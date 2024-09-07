@@ -14,7 +14,7 @@ protocol TargetingSpecificsProviding {
 extension TargetingSpecificsProviding {
     func availableSpecificsFor(_ selectedSpecifics: [TargetingSpecific]) -> [TargetingSpecific] {
         guard !selectedSpecifics.isEmpty else { return targetingSpecifics }
-        let selectedSpecificsCampaigns =
+        let selectedSpecificsChannels =
                 selectedSpecifics
                 .map { Set($0.campaignChannels) }
                 .reduce(Set<String>(selectedSpecifics.first?.campaignChannels ?? []))  { partialResult, set -> Set<String> in
@@ -22,7 +22,7 @@ extension TargetingSpecificsProviding {
                 }
         
         return targetingSpecifics.filter { specific in
-            !selectedSpecificsCampaigns.isDisjoint(with: specific.campaignChannels)
+            !selectedSpecificsChannels.isDisjoint(with: specific.campaignChannels)
         }
     }
 }

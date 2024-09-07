@@ -12,7 +12,11 @@ class ChooseCampaignCoordinator: ChildCoordinator {
     let navigationController: UINavigationController
     let service: CampaignBuilderServiceProviding
     
-    init(service: CampaignBuilderServiceProviding, delegate: ChildCoordinatorDelegate, channel: CampaignChannel, navigationController: UINavigationController) {
+    init(service: CampaignBuilderServiceProviding, delegate: ChildCoordinatorDelegate, navigationController: UINavigationController) {
+        guard let channel = service.selectedCampaignChannel else {
+            fatalError("Trying to select a campaign without a selected channel")
+        }
+        
         self.service = service
         self.navigationController = navigationController
         self.delegate = delegate

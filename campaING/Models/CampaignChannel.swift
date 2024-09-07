@@ -12,8 +12,12 @@ struct CampaignChannel: Codable, Hashable, BuilderTableViewRepresentableType {
     let campaigns: [Campaign]?
     
     init(identifier: String) {
+        self.init(identifier: identifier, campaigns: nil)
+    }
+    
+    init(identifier: String, campaigns: [Campaign]? = nil) {
         self.identifier = identifier
-        campaigns = nil
+        self.campaigns = campaigns
     }
 }
 

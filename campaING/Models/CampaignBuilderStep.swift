@@ -8,7 +8,7 @@
 protocol CampaignBuildingDataType: Equatable, Hashable, Codable { }
 protocol CampaignBuilderFilteringDataType: CampaignBuildingDataType { }
 
-enum CampaignBuilderStep {
+enum CampaignBuilderStep: Equatable {
     case chooseTargetingSpecifics
     case chooseCampaignChannel
     case chooseCampaign

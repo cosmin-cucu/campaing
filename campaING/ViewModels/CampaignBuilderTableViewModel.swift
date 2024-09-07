@@ -11,7 +11,8 @@ class CampaignBuilderTableViewModel<T: BuilderTableViewRepresentableType>: NSObj
     private let step: CampaignBuilderStep
     let dataProvider: CampaignBuilderDataProviding
     var isDataSelected: Bool {
-        !dataProvider.selectedOptionsFor(step).isEmpty
+        guard let data = try? dataProvider.selectedOptionsFor(step) else { return false}
+         return !data.isEmpty
     }
     
     init(dataProvider: CampaignBuilderDataProviding, step: CampaignBuilderStep = .chooseTargetingSpecifics) {
@@ -20,15 +21,15 @@ class CampaignBuilderTableViewModel<T: BuilderTableViewRepresentableType>: NSObj
     }
     
     func customizeCell(_ cell: CampaignBuilderTableViewCell, for row: Int) {
-        guard let element = dataProvider.dataFor(step)[row] as? (T),
-        let selectedElements = dataProvider.selectedOptionsFor(step) as? [T] else { return }
+        guard let element = try? dataProvider.dataFor(step)[row] as? (T),
+        let selectedElements = try? dataProvider.selectedOptionsFor(step) as? [T] else { return }
         let isCellSelected = selectedElements.contains(element)
         element.customize(cell, isSelected: isCellSelected)
     }
  
     // MARK: UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataProvider.dataFor(step).count
+        return (try? dataProvider.dataFor(step).count) ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

@@ -77,7 +77,8 @@ final class BuilderTableViewController<T: BuilderTableViewRepresentableType>: UI
     }
     
     private func submitSelectionAt(_ indexPath: IndexPath) {
-        service.didSelectOption(service.dataFor(step)[indexPath.row])
+        guard let data = try? service.dataFor(step) else { return }
+        service.didSelectOption(data[indexPath.row])
         if step.next?.isFilteringStep == false {
             delegate?.submittedSelection()
         }

@@ -14,19 +14,11 @@
 			remoteGlobalIDString = 1745F9992C7268F50013693C;
 			remoteInfo = campaING;
 		};
-		1745F9BB2C7268F60013693C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1745F9922C7268F50013693C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 1745F9992C7268F50013693C;
-			remoteInfo = campaING;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		1745F99A2C7268F50013693C /* campaING.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = campaING.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1745F9B02C7268F60013693C /* campaINGTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = campaINGTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1745F9BA2C7268F60013693C /* campaINGUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = campaINGUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -67,11 +59,6 @@
 			path = campaINGTests;
 			sourceTree = "<group>";
 		};
-		1745F9BD2C7268F60013693C /* campaINGUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = campaINGUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,13 +76,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1745F9B72C7268F60013693C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -104,7 +84,6 @@
 			children = (
 				1745F99C2C7268F50013693C /* campaING */,
 				1745F9B32C7268F60013693C /* campaINGTests */,
-				1745F9BD2C7268F60013693C /* campaINGUITests */,
 				1745F99B2C7268F50013693C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -114,7 +93,6 @@
 			children = (
 				1745F99A2C7268F50013693C /* campaING.app */,
 				1745F9B02C7268F60013693C /* campaINGTests.xctest */,
-				1745F9BA2C7268F60013693C /* campaINGUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -167,29 +145,6 @@
 			productReference = 1745F9B02C7268F60013693C /* campaINGTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		1745F9B92C7268F60013693C /* campaINGUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1745F9CC2C7268F60013693C /* Build configuration list for PBXNativeTarget "campaINGUITests" */;
-			buildPhases = (
-				1745F9B62C7268F60013693C /* Sources */,
-				1745F9B72C7268F60013693C /* Frameworks */,
-				1745F9B82C7268F60013693C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				1745F9BC2C7268F60013693C /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				1745F9BD2C7268F60013693C /* campaINGUITests */,
-			);
-			name = campaINGUITests;
-			packageProductDependencies = (
-			);
-			productName = campaINGUITests;
-			productReference = 1745F9BA2C7268F60013693C /* campaINGUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -204,10 +159,6 @@
 						CreatedOnToolsVersion = 16.1;
 					};
 					1745F9AF2C7268F60013693C = {
-						CreatedOnToolsVersion = 16.1;
-						TestTargetID = 1745F9992C7268F50013693C;
-					};
-					1745F9B92C7268F60013693C = {
 						CreatedOnToolsVersion = 16.1;
 						TestTargetID = 1745F9992C7268F50013693C;
 					};
@@ -229,7 +180,6 @@
 			targets = (
 				1745F9992C7268F50013693C /* campaING */,
 				1745F9AF2C7268F60013693C /* campaINGTests */,
-				1745F9B92C7268F60013693C /* campaINGUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -243,13 +193,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1745F9AE2C7268F60013693C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1745F9B82C7268F60013693C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -273,13 +216,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1745F9B62C7268F60013693C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -287,11 +223,6 @@
 			isa = PBXTargetDependency;
 			target = 1745F9992C7268F50013693C /* campaING */;
 			targetProxy = 1745F9B12C7268F60013693C /* PBXContainerItemProxy */;
-		};
-		1745F9BC2C7268F60013693C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 1745F9992C7268F50013693C /* campaING */;
-			targetProxy = 1745F9BB2C7268F60013693C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -481,7 +412,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9FQ7VTZ7B9;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = cosmin.cucu.campaINGTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -500,7 +431,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9FQ7VTZ7B9;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = cosmin.cucu.campaINGTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -508,40 +439,6 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/campaING.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/campaING";
-			};
-			name = Release;
-		};
-		1745F9CD2C7268F60013693C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9FQ7VTZ7B9;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = cosmin.cucu.campaINGUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = campaING;
-			};
-			name = Debug;
-		};
-		1745F9CE2C7268F60013693C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9FQ7VTZ7B9;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = cosmin.cucu.campaINGUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = campaING;
 			};
 			name = Release;
 		};
@@ -571,15 +468,6 @@
 			buildConfigurations = (
 				1745F9CA2C7268F60013693C /* Debug */,
 				1745F9CB2C7268F60013693C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		1745F9CC2C7268F60013693C /* Build configuration list for PBXNativeTarget "campaINGUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1745F9CD2C7268F60013693C /* Debug */,
-				1745F9CE2C7268F60013693C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

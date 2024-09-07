@@ -9,13 +9,18 @@ import UIKit
 class CampaignBuilderCoordinator: ChildCoordinator {
     weak var delegate: ChildCoordinatorDelegate?
     var navigationController: UINavigationController
-    private var currentStep: CampaignBuilderStep = .chooseTargetingSpecifics
+    private(set) var currentStep: CampaignBuilderStep = .chooseTargetingSpecifics
     private var childCoordinators: [Coordinator] = []
-    private let buildingService: CampaignBuilderService
+    private let buildingService: CampaignBuilderServiceProviding
     
-    init(navigationController: UINavigationController, delegate: ChildCoordinatorDelegate? = nil) {
-        self.buildingService = CampaignBuilderService(targetingSpecificsProvider: LocalJSONTargetingSpecificsLoader(),
-                                                      campaignProvider: LocalJSONCampaignLoader())
+    convenience init(navigationController: UINavigationController, delegate: ChildCoordinatorDelegate? = nil) {
+        self.init(navigationController: navigationController, buildingService: CampaignBuilderService(targetingSpecificsProvider: LocalJSONTargetingSpecificsLoader(),
+                                                                                                      campaignProvider: LocalJSONCampaignLoader()),
+                  delegate: delegate)
+    }
+    
+    init(navigationController: UINavigationController, buildingService: CampaignBuilderServiceProviding, delegate: ChildCoordinatorDelegate? = nil) {
+        self.buildingService = buildingService
         self.navigationController = navigationController
         self.delegate = delegate
     }
@@ -63,7 +68,6 @@ class CampaignBuilderCoordinator: ChildCoordinator {
     private func attachChooseCampaignCoordinator() {
         let child = ChooseCampaignCoordinator(service: buildingService,
                                               delegate: self,
-                                              channel: buildingService.selectedCampaignChannel!,
                                               navigationController: navigationController)
         attachChild(child)
     }
